@@ -1,19 +1,25 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Planner.Components.Dialogs;
+using Planner.Models;
 
 namespace Planner.Components.Layout
 {
     partial class NavMenu
     {
-        [Inject]
-        public IDialogService DialogService { get; set; } = new DialogService();
+        /// <summary>
+        /// Dialog service
+        /// </summary>
+        [Inject] public IDialogService DialogService { get; set; } = new DialogService();
 
-        public void OpenDialog()
+        /// <summary>
+        /// Open dialog window
+        /// </summary>
+        /// <param name="title"></param>
+        public void OpenDialog(string title)
         {
-            var options = new DialogOptions { CloseOnEscapeKey = true };
-            DialogService.Show<CreatingBranch>("Last element focused", options);
+            var options = new DialogOptions { DisableBackdropClick = true, ClassBackground = "blackout" };
+            DialogService.Show<CreatingBranch>(title, options);
         }
-
     }
 }

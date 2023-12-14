@@ -1,18 +1,10 @@
 ﻿<MudDialog>
     <DialogContent>
-        Dialog Content
+        <MudTextField T="string" @bind-Value="@Company.Name" Label="Название компании"
+                      Validation="@(new Func<string, IEnumerable<string>>(NameStrength))" Immediate="true" />
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Inherit" OnClick="Cancel">Отмена</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="Submit" Disabled="@Success">Ok</MudButton>
     </DialogActions>
 </MudDialog>
-
-
-
-@code {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-
-    void Submit() => MudDialog.Close(DialogResult.Ok(true));
-    void Cancel() => MudDialog.Cancel();
-}
