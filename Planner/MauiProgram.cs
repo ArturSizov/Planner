@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
+using Planner.Auxiliary;
 
 namespace Planner
 {
@@ -17,7 +18,8 @@ namespace Planner
 
             //Add services
             builder.Services.AddMauiBlazorWebView()
-                   .Services.AddMudServices();
+                   .Services.AddMudServices()
+                   .AddSingleton(new DbConnectionOptions { ConnectionString = Path.Combine(FileSystem.AppDataDirectory, "planner.db") });
 
 
 #if DEBUG

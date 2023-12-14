@@ -1,10 +1,19 @@
 ﻿<MudNavMenu>
     <MudNavLink Href="/" Match="NavLinkMatch.All">Planner</MudNavLink>
-   
-    <MudNavGroup Title="Menu" Expanded="true">
-        <MudNavLink Href="/" Match="NavLinkMatch.Prefix">Page2</MudNavLink>
-        <MudNavLink Href="/" Match="NavLinkMatch.Prefix">Page3</MudNavLink>
-    </MudNavGroup>
+
+    @foreach (var company in Companies)
+    {
+        <MudNavGroup Title="@company.Name" Expanded="true">
+            @foreach (var branch in company.Branches)
+            {
+                <MudNavLink Href="/" Match="NavLinkMatch.Prefix">@branch.Name</MudNavLink>
+            }
+
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Style="position: center; top: 0%; left: 10%; transform: translate(-0%,-5%); margin:15px"
+                       Color="Color.Success" Size="Size.Small" OnClick="@(e => OpenDialog("Добавить РУЭС"))">Добавить РУЭС</MudButton>
+        </MudNavGroup>      
+    }
+    
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Style="position: center; top: 20%; left: 25%; transform: translate(-20%,-25%);"
                Color="Color.Success" Size="Size.Medium" OnClick="@(e => OpenDialog("Добавить филиал"))">Добавить филиал</MudButton>
 </MudNavMenu>
