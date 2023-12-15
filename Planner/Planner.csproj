@@ -93,6 +93,7 @@
     <ItemGroup>
       <Folder Include="Contracts\" />
       <Folder Include="Controls\" />
+      <Folder Include="Managers\" />
       <Folder Include="Services\" />
     </ItemGroup>
 

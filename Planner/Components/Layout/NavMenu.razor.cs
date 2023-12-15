@@ -13,28 +13,28 @@ namespace Planner.Components.Layout
         /// </summary>
         [Inject] public IDialogService DialogService { get; set; } = new DialogService();
 
-        public ObservableCollection<Company> Companies { get; set; } = new();
+        public ObservableCollection<CompanyModel> Companies { get; set; } = new();
 
         public NavMenu()
         {
-            Companies = new ObservableCollection<Company>()
+            Companies = new ObservableCollection<CompanyModel>()
             {
-                new Company
+                new CompanyModel
                 { 
                     Name = "Набережно-Челнинский ЗУЭС",
-                    Branches = new ObservableCollection<Branch>
+                    Branches = new ObservableCollection<BranchModel>
                     {
-                        new Branch {Name = "Мензелинский РУЭС"},
-                        new Branch {Name = "Агрызский РУЭС"}
+                        new BranchModel {Name = "Мензелинский РУЭС"},
+                        new BranchModel {Name = "Агрызский РУЭС"}
                     }
                 }, 
-                new Company 
+                new CompanyModel 
                 { 
                     Name = "Альметьевский ЗУЭС",
-                    Branches = new ObservableCollection<Branch>
+                    Branches = new ObservableCollection<BranchModel>
                     {
-                        new Branch {Name = "Муслюмовский РУЭС"},
-                        new Branch {Name = "Алексеевский РУЭС"}
+                        new BranchModel {Name = "Муслюмовский РУЭС"},
+                        new BranchModel {Name = "Алексеевский РУЭС"}
                     }
                 }
             };

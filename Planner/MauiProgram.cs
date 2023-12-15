@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
+using Planner.Abstractions;
 using Planner.Auxiliary;
+using Planner.DataAccessLayer;
+using Planner.DataAccessLayer.DAO;
 
 namespace Planner
 {
@@ -19,7 +22,9 @@ namespace Planner
             //Add services
             builder.Services.AddMauiBlazorWebView()
                    .Services.AddMudServices()
-                   .AddSingleton(new DbConnectionOptions { ConnectionString = Path.Combine(FileSystem.AppDataDirectory, "planner.db") });
+                   .AddSingleton(new DbConnectionOptions { ConnectionString = Path.Combine(FileSystem.AppDataDirectory, "planner.db") })
+                   .AddSingleton<IDataProvider<CompanyDAO>, CompanySQLiteProvider>()
+                   .AddSingleton<IDataProvider<BranchDAO>, BranchSQLiteProvider>();
 
 
 #if DEBUG
@@ -27,7 +32,13 @@ namespace Planner
     		builder.Logging.AddDebug();
 #endif
 
-            return builder.Build();
+            var app = builder.Build();
+
+            // a workaround to initialize the SQL providers before pages
+            _ = app.Services.GetRequiredService<IDataProvider<CompanyDAO>>();
+            _ = app.Services.GetRequiredService<IDataProvider<BranchDAO>>();
+
+            return app;
         }
     }
 }

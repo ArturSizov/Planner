@@ -19,7 +19,7 @@ namespace Planner.Components.Dialogs
         /// <summary>
         /// Company model
         /// </summary>
-        public Company Company { get; set; } = new();
+        public CompanyModel Company { get; set; } = new();
 
         /// <summary>
         /// Ok method
