@@ -1,19 +1,25 @@
-﻿<MudNavMenu>
+﻿<MudNavMenu Margin="Margin.Dense" Color="Color.Warning">
     <MudNavLink Href="/" Match="NavLinkMatch.All">Planner</MudNavLink>
 
-    @foreach (var company in Companies)
+
+    @foreach (var company in CompanyManager!.Items)
     {
-        <MudNavGroup Title="@company.Name" Expanded="true">
+        <MudNavGroup Title="@company.Name" Expanded="false">
             @foreach (var branch in company.Branches)
             {
                 <MudNavLink Href="/" Match="NavLinkMatch.Prefix">@branch.Name</MudNavLink>
             }
 
-            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Style="position: center; top: 0%; left: 10%; transform: translate(-0%,-5%); margin:15px"
-                       Color="Color.Success" Size="Size.Small" OnClick="@(e => OpenDialog("Добавить РУЭС"))">Добавить РУЭС</MudButton>
-        </MudNavGroup>      
+            <MudToolBar Class="justify-end">
+                <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="@(e => CreateCompany())" />
+                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Success"  />
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(async()=> await DeleteCompany(company))" />
+            </MudToolBar>
+        </MudNavGroup>
     }
     
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Style="position: center; top: 20%; left: 25%; transform: translate(-20%,-25%);"
-               Color="Color.Success" Size="Size.Medium" OnClick="@(e => OpenDialog("Добавить филиал"))">Добавить филиал</MudButton>
+               Color="Color.Success" Size="Size.Medium" OnClick="@(e => CreateCompany())">Добавить филиал</MudButton>
+
 </MudNavMenu>
+

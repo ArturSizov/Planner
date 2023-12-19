@@ -1,37 +1,31 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using Planner.Abstractions;
-using Planner.Models;
 
 namespace Planner.Components.Dialogs
 {
-    partial class CreatingBranch
+    partial class CreateItem
     {
         /// <summary>
         /// MudDialogInstance
         /// </summary>
         [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
 
-        [Inject] public IDataManager<CompanyModel>? CompanyManager { get; set; }
+        /// <summary>
+        /// Item name parameter
+        /// </summary>
+        [Parameter] public string ItemName { get; set; } = string.Empty;
 
         /// <summary>
         /// Validation of the OK button
         /// </summary>
         public bool Success { get; set; } = true;
 
-        /// <summary>
-        /// Company model
-        /// </summary>
-        public CompanyModel Company { get; set; } = new();
 
         /// <summary>
         /// Ok method
         /// </summary>
-        public void Submit()
-        {
-            CompanyManager?.CreateAsync(Company);
-            MudDialog?.Close(DialogResult.Ok(true));
-        }
+        public void Submit() => MudDialog?.Close(DialogResult.Ok(true));
+
 
         /// <summary>
         /// Close dialog window
@@ -54,9 +48,10 @@ namespace Planner.Components.Dialogs
             {
                 Success = true;
                 yield return "Не менее 2-ух символов";
-            }           
+            }
             else
                 Success = false;
         }
+
     }
 }

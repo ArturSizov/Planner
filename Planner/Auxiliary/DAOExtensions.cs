@@ -1,10 +1,5 @@
 ﻿using Planner.DataAccessLayer.DAO;
 using Planner.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Planner.Auxiliary
 {
@@ -22,7 +17,7 @@ namespace Planner.Auxiliary
         {
             Id = dao.Id,
             Name = dao.Name,
-            Branches = dao.Branches
+            //Branches = dao.Branches
         };
 
         /// <summary>
@@ -34,7 +29,7 @@ namespace Planner.Auxiliary
         {
             Id = model.Id,
             Name = model.Name, 
-            Branches = model.Branches
+            //Branches = model.Branches
         };
 
         /// <summary>

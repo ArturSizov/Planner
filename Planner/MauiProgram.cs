@@ -1,9 +1,13 @@
 ﻿using Microsoft.Extensions.Logging;
+using MudBlazor;
 using MudBlazor.Services;
 using Planner.Abstractions;
 using Planner.Auxiliary;
 using Planner.DataAccessLayer;
 using Planner.DataAccessLayer.DAO;
+using Planner.Managers;
+using Planner.Models;
+using Planner.Services;
 
 namespace Planner
 {
@@ -19,24 +23,26 @@ namespace Planner
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
 
+#if DEBUG
+            builder.Services.AddBlazorWebViewDeveloperTools();
+            builder.Logging.AddDebug();
+#endif
+
             //Add services
             builder.Services.AddMauiBlazorWebView()
                    .Services.AddMudServices()
                    .AddSingleton(new DbConnectionOptions { ConnectionString = Path.Combine(FileSystem.AppDataDirectory, "planner.db") })
+                   .AddSingleton<IDialogService, DialogService>()
                    .AddSingleton<IDataProvider<CompanyDAO>, CompanySQLiteProvider>()
-                   .AddSingleton<IDataProvider<BranchDAO>, BranchSQLiteProvider>();
 
+                   .AddSingleton<IDataManager<CompanyModel>, CompanyManager>()
+                   .AddSingleton<ICustomDialogService, CustomDialogService>();
 
-#if DEBUG
-            builder.Services.AddBlazorWebViewDeveloperTools();
-    		builder.Logging.AddDebug();
-#endif
 
             var app = builder.Build();
 
             // a workaround to initialize the SQL providers before pages
             _ = app.Services.GetRequiredService<IDataProvider<CompanyDAO>>();
-            _ = app.Services.GetRequiredService<IDataProvider<BranchDAO>>();
 
             return app;
         }

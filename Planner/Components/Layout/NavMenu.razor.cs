@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
-using MudBlazor;
-using Planner.Components.Dialogs;
+using Planner.Abstractions;
 using Planner.Models;
-using System.Collections.ObjectModel;
 
 namespace Planner.Components.Layout
 {
@@ -11,44 +9,74 @@ namespace Planner.Components.Layout
         /// <summary>
         /// Dialog service
         /// </summary>
-        [Inject] public IDialogService DialogService { get; set; } = new DialogService();
+        [Inject] public ICustomDialogService? CustomDialogService { get; set; }
 
-        public ObservableCollection<CompanyModel> Companies { get; set; } = new();
+        /// <summary>
+        /// Company data manager
+        /// </summary>
+        [Inject] public IDataManager<CompanyModel>? CompanyManager { get; set; }
 
-        public NavMenu()
+        /// <summary>
+        /// Company data manager
+        /// </summary>
+        //[Inject] public IDataManager<BranchModel>? BranchManager { get; set; }
+
+        /// <summary>
+        /// Create company open dialog window
+        /// </summary>
+        public async Task CreateCompany()
         {
-            Companies = new ObservableCollection<CompanyModel>()
-            {
-                new CompanyModel
-                { 
-                    Name = "Набережно-Челнинский ЗУЭС",
-                    Branches = new ObservableCollection<BranchModel>
+            if (CustomDialogService == null)
+                return;
+
+            var result = await CustomDialogService.CreateItemDialog("Добавить ЗУЭС");
+
+            if (result)
+                if (CompanyManager != null)
+                    await CompanyManager.CreateAsync(new CompanyModel
                     {
-                        new BranchModel {Name = "Мензелинский РУЭС"},
-                        new BranchModel {Name = "Агрызский РУЭС"}
-                    }
-                }, 
-                new CompanyModel 
-                { 
-                    Name = "Альметьевский ЗУЭС",
-                    Branches = new ObservableCollection<BranchModel>
-                    {
-                        new BranchModel {Name = "Муслюмовский РУЭС"},
-                        new BranchModel {Name = "Алексеевский РУЭС"}
-                    }
-                }
-            };
-            
+                        Name = "ws"
+                    });
+
+            StateHasChanged();
         }
 
         /// <summary>
-        /// Open dialog window
+        /// Create branch open dialog window
         /// </summary>
-        /// <param name="title"></param>
-        public void OpenDialog(string title)
+        //public async Task CreateBranch()
+        //{
+        //    if (CustomDialogService == null)
+        //        return;
+
+        //    var result = await CustomDialogService.CreateItemDialog("Добавить РУЭС");
+
+        //    if (result)
+        //        if (BranchManager != null)
+        //            await BranchManager.CreateAsync(new BranchModel
+        //            {
+        //                Name = "wse"
+        //            });
+
+        //    StateHasChanged();
+        //}
+
+        /// <summary>
+        /// Delete company
+        /// </summary>
+        /// <param name="company">CompanyModel</param>
+        /// <returns></returns>
+        public async Task DeleteCompany(CompanyModel company)
         {
-            var options = new DialogOptions { DisableBackdropClick = true, ClassBackground = "blackout" };
-            DialogService.Show<CreatingBranch>(title, options);
+            if (CustomDialogService == null)
+                return;
+            var result = await CustomDialogService.DeleteItemDialog(company.Name);
+
+            if (result)
+                if (CompanyManager != null)
+                    await CompanyManager.DeleteAsync(company);
+
+            StateHasChanged();
         }
     }
 }
