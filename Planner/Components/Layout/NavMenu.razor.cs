@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Planner.Abstractions;
+using Planner.Components.Dialogs;
 using Planner.Models;
 
 namespace Planner.Components.Layout
@@ -29,14 +30,17 @@ namespace Planner.Components.Layout
             if (CustomDialogService == null)
                 return;
 
-            var result = await CustomDialogService.CreateItemDialog("Добавить ЗУЭС");
+            await CustomDialogService.CreateItemDialog<CreateCompany>("Добавить ЗУЭС");
 
-            if (result)
-                if (CompanyManager != null)
-                    await CompanyManager.CreateAsync(new CompanyModel
-                    {
-                        Name = "ws"
-                    });
+            StateHasChanged();
+        }
+
+        public async Task EditCompany()
+        {
+            if (CustomDialogService == null)
+                return;
+
+            await CustomDialogService.CreateItemDialog<CreateCompany>("Добавить ЗУЭС");
 
             StateHasChanged();
         }

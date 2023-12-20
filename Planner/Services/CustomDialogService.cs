@@ -1,4 +1,5 @@
-﻿using MudBlazor;
+﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using Planner.Abstractions;
 using Planner.Components.Dialogs;
 
@@ -24,11 +25,11 @@ namespace Planner.Services
         }
 
         /// <inheritdoc/>
-        public async Task<bool> CreateItemDialog(string title)
+        public async Task<bool> CreateItemDialog<T>(string title) where T : ComponentBase
         {
             var options = new DialogOptions { DisableBackdropClick = true, ClassBackground = "blackout" };
-            var dialog = _dialogService.Show<CreateItem>(title, options);
-            
+            var dialog = _dialogService.Show<T>(title, options);
+
             var result = await dialog.Result;
 
             if (!result.Canceled)
@@ -40,10 +41,12 @@ namespace Planner.Services
         /// <inheritdoc/>
         public async Task<bool> DeleteItemDialog(string item)
         {
-            var parameters = new DialogParameters<CustomMudDialog>();
-            parameters.Add(x => x.ContentText, $"Вы действительно хотите удалить {item}?");
-            parameters.Add(x => x.ButtonText, "Удалить");
-            parameters.Add(x => x.Color, MudBlazor.Color.Error);
+            var parameters = new DialogParameters<CustomMudDialog>
+            {
+                { x => x.ContentText, $"Вы действительно хотите удалить {item}?" },
+                { x => x.ButtonText, "Удалить" },
+                { x => x.Color, MudBlazor.Color.Error }
+            };
 
             var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.False };
 

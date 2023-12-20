@@ -1,14 +1,21 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using Planner.Abstractions;
+using Planner.Models;
 
 namespace Planner.Components.Dialogs
 {
-    partial class CreateItem
+    partial class CreateCompany
     {
         /// <summary>
         /// MudDialogInstance
         /// </summary>
         [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
+
+        /// <summary>
+        /// Company data manager
+        /// </summary>
+        [Inject] private IDataManager<CompanyModel>? _companyManager { get; set; }
 
         /// <summary>
         /// Item name parameter
@@ -24,7 +31,16 @@ namespace Planner.Components.Dialogs
         /// <summary>
         /// Ok method
         /// </summary>
-        public void Submit() => MudDialog?.Close(DialogResult.Ok(true));
+        public async Task Submit()
+        {
+            if (_companyManager != null)
+                await _companyManager.CreateAsync(new CompanyModel
+                {
+                    Name = ItemName
+                });
+
+            MudDialog?.Close(DialogResult.Ok(true));
+        }
 
 
         /// <summary>

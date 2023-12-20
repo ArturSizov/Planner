@@ -1,4 +1,6 @@
-﻿namespace Planner.Abstractions
+﻿using Microsoft.AspNetCore.Components;
+
+namespace Planner.Abstractions
 {
     public interface ICustomDialogService
     {
@@ -14,6 +16,6 @@
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        Task<bool> CreateItemDialog(string item);
+        Task<bool> CreateItemDialog<T>(string item) where T : ComponentBase;
     }
 }
