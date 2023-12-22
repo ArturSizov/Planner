@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using Planner.Abstractions;
 using Planner.Components.Dialogs;
 using Planner.Models;
@@ -25,22 +26,34 @@ namespace Planner.Components.Layout
         /// <summary>
         /// Create company open dialog window
         /// </summary>
-        public async Task CreateCompany()
+        public async Task CreateCompanyAsync()
         {
             if (CustomDialogService == null)
                 return;
 
-            await CustomDialogService.CreateItemDialog<CreateCompany>("Добавить ЗУЭС");
+            var result = await CustomDialogService.CreateItemDialog<CreateCompany>("Добавить ЗУЭС", []);
+
+            var company = result.Item2 as CompanyModel;
+
+            if (result.Item1 && company != null)
+                CompanyManager?.CreateAsync(company);
 
             StateHasChanged();
         }
 
-        public async Task EditCompany()
+        public async Task EditCompanyAsync(CompanyModel company)
         {
             if (CustomDialogService == null)
                 return;
+            var parameters = new DialogParameters<CreateCompany>
+            {
+                {x => x.Company, company }
+            };
 
-            await CustomDialogService.CreateItemDialog<CreateCompany>("Добавить ЗУЭС");
+            var result = await CustomDialogService.CreateItemDialog<CreateCompany>("Редактировать ЗУЭС", parameters);
+
+            if (result.Item1 && company != null)
+                CompanyManager?.UpdateAsync(company);
 
             StateHasChanged();
         }
@@ -70,13 +83,13 @@ namespace Planner.Components.Layout
         /// </summary>
         /// <param name="company">CompanyModel</param>
         /// <returns></returns>
-        public async Task DeleteCompany(CompanyModel company)
+        public async Task DeleteCompanyAsync(CompanyModel company)
         {
             if (CustomDialogService == null)
                 return;
             var result = await CustomDialogService.DeleteItemDialog(company.Name);
 
-            if (result)
+            if (result && company != null)
                 if (CompanyManager != null)
                     await CompanyManager.DeleteAsync(company);
 

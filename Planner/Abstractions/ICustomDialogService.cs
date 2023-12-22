@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
 
 namespace Planner.Abstractions
 {
@@ -14,8 +15,9 @@ namespace Planner.Abstractions
         /// <summary>
         /// Create item dialog window
         /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        Task<bool> CreateItemDialog<T>(string item) where T : ComponentBase;
+        /// <typeparam name="T">Component</typeparam>
+        /// <param name="title"></param>
+        /// <returns>bool, object</returns>
+        Task<(bool, object)> CreateItemDialog<T>(string title, DialogParameters parameters) where T : ComponentBase;
     }
 }

@@ -25,17 +25,19 @@ namespace Planner.Services
         }
 
         /// <inheritdoc/>
-        public async Task<bool> CreateItemDialog<T>(string title) where T : ComponentBase
+        public async Task<(bool, object)> CreateItemDialog<T>(string title, DialogParameters parameters) where T : ComponentBase
         {
             var options = new DialogOptions { DisableBackdropClick = true, ClassBackground = "blackout" };
-            var dialog = _dialogService.Show<T>(title, options);
+            var dialog = _dialogService.Show<T>(title, parameters, options);
 
             var result = await dialog.Result;
 
-            if (!result.Canceled)
-                return true;
+            var returnedData = await dialog.GetReturnValueAsync<object>();
 
-            return false;
+            if (!result.Canceled)
+                return (true, returnedData);
+
+            return (true, returnedData);
         }
 
         /// <inheritdoc/>

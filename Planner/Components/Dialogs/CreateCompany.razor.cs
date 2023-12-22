@@ -13,14 +13,9 @@ namespace Planner.Components.Dialogs
         [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
 
         /// <summary>
-        /// Company data manager
-        /// </summary>
-        [Inject] private IDataManager<CompanyModel>? _companyManager { get; set; }
-
-        /// <summary>
         /// Item name parameter
         /// </summary>
-        [Parameter] public string ItemName { get; set; } = string.Empty;
+        [Parameter] public CompanyModel Company { get; set; } = new();
 
         /// <summary>
         /// Validation of the OK button
@@ -31,16 +26,7 @@ namespace Planner.Components.Dialogs
         /// <summary>
         /// Ok method
         /// </summary>
-        public async Task Submit()
-        {
-            if (_companyManager != null)
-                await _companyManager.CreateAsync(new CompanyModel
-                {
-                    Name = ItemName
-                });
-
-            MudDialog?.Close(DialogResult.Ok(true));
-        }
+        public void Submit() => MudDialog?.Close(Company);
 
 
         /// <summary>

@@ -11,15 +11,15 @@
             }
 
             <MudToolBar Class="justify-end">
-                <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="@(e => CreateCompany())" />
-                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Success"  />
-                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(async()=> await DeleteCompany(company))" />
+                <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="@(e => CreateCompanyAsync())" />
+                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" OnClick="@(async()=> await EditCompanyAsync(company))" />
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(async()=> await DeleteCompanyAsync(company))" />
             </MudToolBar>
         </MudNavGroup>
     }
     
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Style="position: center; top: 20%; left: 25%; transform: translate(-20%,-25%);"
-               Color="Color.Success" Size="Size.Medium" OnClick="@(e => CreateCompany())">Добавить филиал</MudButton>
+               Color="Color.Success" Size="Size.Medium" OnClick="@(async()=> await  CreateCompanyAsync())">Добавить филиал</MudButton>
 
 </MudNavMenu>
 
