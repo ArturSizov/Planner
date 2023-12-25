@@ -16,8 +16,9 @@ namespace Planner.Abstractions
         /// Create item dialog window
         /// </summary>
         /// <typeparam name="T">Component</typeparam>
-        /// <param name="title"></param>
-        /// <returns>bool, object</returns>
+        /// <param name="title">Title string</param>
+        /// <param name="parameters">Dialog Parameters</param>
+        /// <returns></returns>
         Task<(bool, object)> CreateItemDialog<T>(string title, DialogParameters parameters) where T : ComponentBase;
     }
 }

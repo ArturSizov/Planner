@@ -15,7 +15,7 @@ namespace Planner.Components.Dialogs
         /// <summary>
         /// Item name parameter
         /// </summary>
-        [Parameter] public CompanyModel Company { get; set; } = new();
+        [Parameter] public string ItemName { get; set; } = string.Empty;
 
         /// <summary>
         /// Validation of the OK button
@@ -26,7 +26,7 @@ namespace Planner.Components.Dialogs
         /// <summary>
         /// Ok method
         /// </summary>
-        public void Submit() => MudDialog?.Close(Company);
+        public void Submit() => MudDialog?.Close(ItemName);
 
 
         /// <summary>

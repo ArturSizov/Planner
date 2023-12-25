@@ -3,6 +3,7 @@ using MudBlazor;
 using Planner.Abstractions;
 using Planner.Components.Dialogs;
 using Planner.Models;
+using System.Collections.ObjectModel;
 
 namespace Planner.Components.Layout
 {
@@ -19,11 +20,6 @@ namespace Planner.Components.Layout
         [Inject] public IDataManager<CompanyModel>? CompanyManager { get; set; }
 
         /// <summary>
-        /// Company data manager
-        /// </summary>
-        //[Inject] public IDataManager<BranchModel>? BranchManager { get; set; }
-
-        /// <summary>
         /// Create company open dialog window
         /// </summary>
         public async Task CreateCompanyAsync()
@@ -33,26 +29,32 @@ namespace Planner.Components.Layout
 
             var result = await CustomDialogService.CreateItemDialog<CreateCompany>("Добавить ЗУЭС", []);
 
-            var company = result.Item2 as CompanyModel;
+            var name = result.Item2 as string;
 
-            if (result.Item1 && company != null)
-                CompanyManager?.CreateAsync(company);
+            if (result.Item1 && name != null)
+                CompanyManager?.CreateAsync(new CompanyModel { Name = name} );
 
             StateHasChanged();
         }
 
+        /// <summary>
+        /// Edit company
+        /// </summary>
+        /// <param name="company"></param>
+        /// <returns></returns>
         public async Task EditCompanyAsync(CompanyModel company)
         {
             if (CustomDialogService == null)
                 return;
+
             var parameters = new DialogParameters<CreateCompany>
             {
-                {x => x.Company, company }
+                { x => x.ItemName, company.Name }
             };
 
             var result = await CustomDialogService.CreateItemDialog<CreateCompany>("Редактировать ЗУЭС", parameters);
 
-            if (result.Item1 && company != null)
+            if (result.Item1 && company != null && CompanyManager != null)
                 CompanyManager?.UpdateAsync(company);
 
             StateHasChanged();
@@ -61,22 +63,22 @@ namespace Planner.Components.Layout
         /// <summary>
         /// Create branch open dialog window
         /// </summary>
-        //public async Task CreateBranch()
-        //{
-        //    if (CustomDialogService == null)
-        //        return;
+        /// <param name="company"></param>
+        /// <returns></returns>
+        public async Task CreateBranchAsync(CompanyModel company)
+        {
+            if (CustomDialogService == null || CompanyManager == null)
+                return;
 
-        //    var result = await CustomDialogService.CreateItemDialog("Добавить РУЭС");
+            var result = await CustomDialogService.CreateItemDialog<CreateCompany>("Добавить РУЭС", []);
 
-        //    if (result)
-        //        if (BranchManager != null)
-        //            await BranchManager.CreateAsync(new BranchModel
-        //            {
-        //                Name = "wse"
-        //            });
+            var name = result.Item2 as string;
 
-        //    StateHasChanged();
-        //}
+            if (result.Item1 && name != null)
+                CompanyManager?.Items?.FirstOrDefault(i => i.Id == company.Id)?.Branches.Add(new BranchModel { Name = name });
+
+            StateHasChanged();
+        }
 
         /// <summary>
         /// Delete company
