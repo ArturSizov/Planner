@@ -1,21 +1,20 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using Planner.Abstractions;
 using Planner.Models;
 
 namespace Planner.Components.Dialogs
 {
-    partial class CreateCompany
+    public partial class CreateCompany
     {
         /// <summary>
-        /// MudDialogInstance
+        /// Mud Dialog Instance
         /// </summary>
         [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
 
         /// <summary>
         /// Item name parameter
         /// </summary>
-        [Parameter] public string ItemName { get; set; } = string.Empty;
+        [Parameter] public CompanyModel Company { get; set; } = new();
 
         /// <summary>
         /// Validation of the OK button
@@ -26,7 +25,7 @@ namespace Planner.Components.Dialogs
         /// <summary>
         /// Ok method
         /// </summary>
-        public void Submit() => MudDialog?.Close(ItemName);
+        public void Submit() => MudDialog?.Close(Company);
 
 
         /// <summary>

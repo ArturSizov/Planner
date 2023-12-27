@@ -70,10 +70,16 @@ namespace Planner.Managers
         {
             var foundItem = Items.FirstOrDefault(x => x.Id == item.Id);
 
+            if(foundItem != null)
+                Items.Remove(foundItem);
+
             if (foundItem == null)
                 return Task.FromResult(0);
 
             foundItem = item;
+
+            Items.Add(foundItem);
+
             return _dataProvider.UpdateAsync(item.ToDAO());
         }
 

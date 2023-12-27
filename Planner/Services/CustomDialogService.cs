@@ -28,6 +28,7 @@ namespace Planner.Services
         public async Task<(bool, object)> CreateItemDialog<T>(string title, DialogParameters parameters) where T : ComponentBase
         {
             var options = new DialogOptions { DisableBackdropClick = true, ClassBackground = "blackout" };
+
             var dialog = _dialogService.Show<T>(title, parameters, options);
 
             var result = await dialog.Result;
@@ -37,7 +38,7 @@ namespace Planner.Services
             if (!result.Canceled)
                 return (true, returnedData);
 
-            return (true, returnedData);
+            return (false, returnedData);
         }
 
         /// <inheritdoc/>
@@ -53,6 +54,7 @@ namespace Planner.Services
             var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.False };
 
             var dialog = _dialogService.Show<CustomMudDialog>("Удалить", parameters, options);
+
             var result = await dialog.Result;
 
             if (!result.Canceled)

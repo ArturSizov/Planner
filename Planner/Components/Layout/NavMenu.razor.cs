@@ -29,10 +29,10 @@ namespace Planner.Components.Layout
 
             var result = await CustomDialogService.CreateItemDialog<CreateCompany>("Добавить ЗУЭС", []);
 
-            var name = result.Item2 as string;
+            var company = result.Item2 as CompanyModel;
 
-            if (result.Item1 && name != null)
-                CompanyManager?.CreateAsync(new CompanyModel { Name = name} );
+            if (result.Item1 && company != null)
+                CompanyManager?.CreateAsync(company);
 
             StateHasChanged();
         }
@@ -47,15 +47,36 @@ namespace Planner.Components.Layout
             if (CustomDialogService == null)
                 return;
 
+            var editCompany = new CompanyModel
+            {
+                Name = company.Name,
+                Id = company.Id,
+                Branches = company.Branches
+            };
+
             var parameters = new DialogParameters<CreateCompany>
             {
-                { x => x.ItemName, company.Name }
+                { x => x.Company, editCompany }
             };
 
             var result = await CustomDialogService.CreateItemDialog<CreateCompany>("Редактировать ЗУЭС", parameters);
 
             if (result.Item1 && company != null && CompanyManager != null)
-                CompanyManager?.UpdateAsync(company);
+            {
+                var edit = result.Item2 as CompanyModel;
+
+                if(edit != null)
+                    company = new CompanyModel
+                    {
+                        Id = editCompany.Id,
+                        Name = edit.Name,
+                        Branches = editCompany.Branches
+                    };
+
+                await CompanyManager.UpdateAsync(company);
+            }
+            else
+                return;
 
             StateHasChanged();
         }
@@ -91,9 +112,8 @@ namespace Planner.Components.Layout
                 return;
             var result = await CustomDialogService.DeleteItemDialog(company.Name);
 
-            if (result && company != null)
-                if (CompanyManager != null)
-                    await CompanyManager.DeleteAsync(company);
+            if (result && company != null && CompanyManager != null)
+                await CompanyManager.DeleteAsync(company);
 
             StateHasChanged();
         }
