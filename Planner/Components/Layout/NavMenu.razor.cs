@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Planner.Abstractions;
+using Planner.Auxiliary;
 using Planner.Components.Dialogs;
+using Planner.DataAccessLayer.DAO;
 using Planner.Models;
-using System.Collections.ObjectModel;
 
 namespace Planner.Components.Layout
 {
@@ -18,6 +19,13 @@ namespace Planner.Components.Layout
         /// Company data manager
         /// </summary>
         [Inject] public IDataManager<CompanyModel>? CompanyManager { get; set; }
+
+        /// <summary>
+        /// Page navigation
+        /// </summary>
+        [Inject] private NavigationManager? _navigation { get; set; }
+
+        [Parameter] public string? BranchName { get; set; } = "01";
 
         /// <summary>
         /// Create company open dialog window
@@ -47,7 +55,7 @@ namespace Planner.Components.Layout
             if (CustomDialogService == null)
                 return;
 
-            var editCompany = new CompanyModel
+            var item = new CompanyModel
             {
                 Name = company.Name,
                 Id = company.Id,
@@ -56,29 +64,29 @@ namespace Planner.Components.Layout
 
             var parameters = new DialogParameters<CreateCompany>
             {
-                { x => x.Company, editCompany }
+                { x => x.Company, item }
             };
 
             var result = await CustomDialogService.CreateItemDialog<CreateCompany>("Редактировать ЗУЭС", parameters);
 
             if (result.Item1 && company != null && CompanyManager != null)
             {
-                var edit = result.Item2 as CompanyModel;
-
-                if(edit != null)
-                    company = new CompanyModel
+                if (item != null)
+                {
+                    if (result.Item2 is CompanyModel comp)
                     {
-                        Id = editCompany.Id,
-                        Name = edit.Name,
-                        Branches = editCompany.Branches
-                    };
+                        item.Id = comp.Id;
+                        item.Name = comp.Name;
+                        item.Branches = comp.Branches;
+                    }
 
-                await CompanyManager.UpdateAsync(company);
+                    await CompanyManager.UpdateAsync(item);
+                }
             }
-            else
+            else 
                 return;
 
-            StateHasChanged();
+                StateHasChanged();
         }
 
         /// <summary>
@@ -93,10 +101,8 @@ namespace Planner.Components.Layout
 
             var result = await CustomDialogService.CreateItemDialog<CreateCompany>("Добавить РУЭС", []);
 
-            var name = result.Item2 as string;
-
-            if (result.Item1 && name != null)
-                CompanyManager?.Items?.FirstOrDefault(i => i.Id == company.Id)?.Branches.Add(new BranchModel { Name = name });
+            if (result.Item1 && result.Item2 is CompanyModel comp)
+                CompanyManager?.Items?.FirstOrDefault(i => i.Id == company.Id)?.Branches.Add(new BranchModel { Name = comp.Name });
 
             StateHasChanged();
         }
@@ -115,6 +121,16 @@ namespace Planner.Components.Layout
             if (result && company != null && CompanyManager != null)
                 await CompanyManager.DeleteAsync(company);
 
+            StateHasChanged();
+        }
+
+        /// <summary>
+        /// Opening detail branch page
+        /// </summary>
+        /// <param name="id"></param>
+        public void OpenDetailsBranch(string name)
+        {
+            _navigation?.NavigateTo($"details/{name}", true);
             StateHasChanged();
         }
     }

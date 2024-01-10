@@ -31,28 +31,5 @@ namespace Planner.Auxiliary
             Name = model.Name, 
             //Branches = model.Branches
         };
-
-        /// <summary>
-        /// Transforms the branch into a model
-        /// </summary>
-        /// <param name="dao"></param>
-        /// <returns></returns>
-        public static BranchModel ToModel(this BranchDAO dao) => new()
-        {
-            Id = dao.Id, 
-            Name = dao.Name
-        };
-
-        /// <summary>
-        /// Transforms the branch into a DAO
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        public static BranchDAO ToDAO(this BranchModel model) => new()
-        {
-            Id = model.Id,
-            Name = model.Name
-        };
-         
     }
 }

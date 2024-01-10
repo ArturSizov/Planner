@@ -1,5 +1,6 @@
-﻿<MudNavMenu Margin="Margin.Dense" Color="Color.Warning">
-    <MudNavLink Href="/" Match="NavLinkMatch.All">Planner</MudNavLink>
+﻿<MudNavMenu Margin="Margin.Dense" Color="Color.Warning"> 
+
+    <MudText Style="margin:5px" Typo="Typo.h5" Color="Color.Success">Planner</MudText>
 
          @if (CompanyManager != null)
 
@@ -8,7 +9,7 @@
                 <MudNavGroup Title="@company.Name" Expanded="false">
                     @foreach (var branch in company.Branches)
                     {
-                        <MudNavLink Href="/" Match="NavLinkMatch.Prefix">@branch.Name</MudNavLink>
+                        <MudNavLink OnClick="@(()=> OpenDetailsBranch(branch.Name))" Match="NavLinkMatch.Prefix">@branch.Name</MudNavLink>
                     }
 
                     <MudToolBar Class="justify-end">

@@ -6,7 +6,7 @@
              BackgroundColor="Transparent">
 
     <BlazorWebView x:Name="blazorWebView" 
-                   HostPage="wwwroot/index.html" Margin="5">
+                   HostPage="wwwroot/index.html" Margin="1">
         <BlazorWebView.RootComponents>
             <RootComponent Selector="#app" ComponentType="{x:Type local:Routes}"/>
         </BlazorWebView.RootComponents>
