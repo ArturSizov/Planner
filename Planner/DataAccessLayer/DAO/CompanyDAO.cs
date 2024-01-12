@@ -1,4 +1,5 @@
-﻿using SQLite;
+﻿using Planner.Models;
+using System.Collections.ObjectModel;
 
 namespace Planner.DataAccessLayer.DAO
 {
@@ -7,10 +8,9 @@ namespace Planner.DataAccessLayer.DAO
     /// </summary>
     public class CompanyDAO
     {
-        [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
 
-        //public ObservableCollection<BranchModel> Branches { get; set; } = new();
+        public ObservableCollection<BranchModel> Branches { get; set; } = new();
     }
 }

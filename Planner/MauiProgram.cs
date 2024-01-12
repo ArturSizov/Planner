@@ -33,7 +33,7 @@ namespace Planner
                    .Services.AddMudServices()
                    .AddSingleton(new DbConnectionOptions { ConnectionString = Path.Combine(FileSystem.AppDataDirectory, "planner.db") })
                    .AddSingleton<IDialogService, DialogService>()
-                   .AddSingleton<IDataProvider<CompanyDAO>, CompanySQLiteProvider>()
+                   .AddSingleton<IDataProvider<CompanyDAO>, CompanyLiteDbProvider>()
 
                    .AddSingleton<IDataManager<CompanyModel>, CompanyManager>()
                    .AddSingleton<ICustomDialogService, CustomDialogService>();
@@ -41,7 +41,7 @@ namespace Planner
 
             var app = builder.Build();
 
-            // a workaround to initialize the SQL providers before pages
+            // a workaround to initialize the LiteDb providers before pages
             _ = app.Services.GetRequiredService<IDataProvider<CompanyDAO>>();
 
             return app;

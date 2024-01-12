@@ -1,20 +1,20 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using LiteDB;
+using Microsoft.Extensions.Logging;
 using Planner.Abstractions;
 using Planner.Auxiliary;
 using Planner.DataAccessLayer.DAO;
-using SQLite;
 
 namespace Planner.DataAccessLayer
 {
     /// <summary>
     /// Working with the database Company
     /// </summary>
-    public class CompanySQLiteProvider : IDataProvider<CompanyDAO>
+    public class CompanyLiteDbProvider : IDataProvider<CompanyDAO>
     {
-        private const SQLiteOpenFlags _flags = SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache;
+        private const string companiesDataCollectionName = "companies";
 
         /// <summary>
-        /// Logger Company SQLite provider
+        /// Logger Company LiteDatabase provider
         /// </summary>
         private readonly ILogger _logger;
 
@@ -26,14 +26,14 @@ namespace Planner.DataAccessLayer
         /// <summary>
         /// Database
         /// </summary>
-        private SQLiteAsyncConnection? _database;
+        private LiteDatabase? _database;
 
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="logger">Logger Company SQLite provider</param>
         /// <param name="options">Options connection</param>
-        public CompanySQLiteProvider(ILogger<CompanySQLiteProvider> logger, DbConnectionOptions options)
+        public CompanyLiteDbProvider(ILogger<CompanyLiteDbProvider> logger, DbConnectionOptions options)
         {
             _logger = logger;
             _connectionString = options.ConnectionString;
@@ -48,7 +48,11 @@ namespace Planner.DataAccessLayer
 
             try
             {
-                return _database.InsertAsync(item);
+                var collection = _database.GetCollection<CompanyDAO>(companiesDataCollectionName);
+                collection.Insert(item);
+                collection.EnsureIndex(x => x.Name);
+
+                return Task.FromResult(1);
             }
             catch (Exception ex)
             {
@@ -65,7 +69,9 @@ namespace Planner.DataAccessLayer
 
             try
             {
-                return _database.DeleteAllAsync<CompanyDAO>();
+                var collection = _database.GetCollection<CompanyDAO>(companiesDataCollectionName).DeleteAll();
+
+                return Task.FromResult(1);
             }
             catch (Exception ex)
             {
@@ -82,7 +88,9 @@ namespace Planner.DataAccessLayer
 
             try
             {
-                return _database.DeleteAsync(item);
+                _database.GetCollection<CompanyDAO>(companiesDataCollectionName).Delete(item.Id);
+
+                return Task.FromResult(1);
             }
             catch (Exception ex)
             {
@@ -99,7 +107,9 @@ namespace Planner.DataAccessLayer
 
             try
             {
-                return _database.Table<CompanyDAO>().ToListAsync();
+                var collection = _database.GetCollection<CompanyDAO>(companiesDataCollectionName);
+
+                return Task.FromResult(collection.Query().ToList());
             }
             catch (Exception ex)
             {
@@ -116,7 +126,9 @@ namespace Planner.DataAccessLayer
 
             try
             {
-                return _database.Table<CompanyDAO?>().Where(x => x != null && x.Id == id).FirstOrDefaultAsync();
+                var collection = _database.GetCollection<CompanyDAO?>(companiesDataCollectionName);
+
+                return Task.FromResult(collection.Query().Where(x => x != null && x.Id == id).FirstOrDefault());
             }
             catch (Exception ex)
             {
@@ -133,7 +145,10 @@ namespace Planner.DataAccessLayer
 
             try
             {
-                return _database.UpdateAsync(item);
+                var collection = _database.GetCollection<CompanyDAO>(companiesDataCollectionName);
+                var a = collection.Update(item);
+
+                return Task.FromResult(1);
             }
             catch (Exception ex)
             {
@@ -146,39 +161,15 @@ namespace Planner.DataAccessLayer
         /// Initializes the database
         /// </summary>
         /// <returns></returns>
-        private async Task InitAsync()
+        private void InitAsync()
         {
             try
             {
-                _database ??= new SQLiteAsyncConnection(_connectionString, _flags);
-                var exists = await IsTableExists(nameof(CompanyDAO));
-
-                if (!exists)
-                    _ = await _database.CreateTableAsync<CompanyDAO>();
+                _database ??= new LiteDatabase(_connectionString);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Exception in InitAsync()");
-            }
-        }
-
-        /// <summary>
-        /// Checks if table already exists
-        /// </summary>
-        /// <param name="tableName">Table name to check</param>
-        /// <returns><see langword="true"/> if exists; otherwise <see langword="false"/></returns>
-        private async Task<bool> IsTableExists(string tableName)
-        {
-            try
-            {
-                _database ??= new SQLiteAsyncConnection(_connectionString, _flags);
-                var info = await _database.GetTableInfoAsync(tableName);
-                return info != null && info.Count > 0;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Exception in IsTableExists()");
-                return false;
             }
         }
     }

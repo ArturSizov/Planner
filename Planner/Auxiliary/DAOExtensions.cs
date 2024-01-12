@@ -17,7 +17,7 @@ namespace Planner.Auxiliary
         {
             Id = dao.Id,
             Name = dao.Name,
-            //Branches = dao.Branches
+            Branches = dao.Branches
         };
 
         /// <summary>
@@ -28,8 +28,8 @@ namespace Planner.Auxiliary
         public static CompanyDAO ToDAO(this CompanyModel model) => new()
         {
             Id = model.Id,
-            Name = model.Name, 
-            //Branches = model.Branches
+            Name = model.Name,
+            Branches = model.Branches
         };
     }
 }

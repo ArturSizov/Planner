@@ -8,18 +8,8 @@ namespace Planner.Models
     public class BranchModel : BindableObject
     {
         private string _name = string.Empty;
-        private int _id;
-        private ObservableCollection<ServiceModel> _services = [];
 
-        public int Id
-        {
-            get => _id;
-            set
-            {
-                _id = value;
-                OnPropertyChanged();
-            }
-        }
+        private ObservableCollection<ServiceModel> _services = [];
 
         public string Name
         {

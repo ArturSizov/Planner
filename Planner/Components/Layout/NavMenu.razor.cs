@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Planner.Abstractions;
-using Planner.Auxiliary;
 using Planner.Components.Dialogs;
-using Planner.DataAccessLayer.DAO;
 using Planner.Models;
 
 namespace Planner.Components.Layout
@@ -25,7 +23,15 @@ namespace Planner.Components.Layout
         /// </summary>
         [Inject] private NavigationManager? _navigation { get; set; }
 
-        [Parameter] public string? BranchName { get; set; } = "01";
+        /// <summary>
+        /// Initialized NavMenu
+        /// </summary>
+        /// <returns></returns>
+        protected override async Task OnInitializedAsync()
+        {
+           if(CompanyManager != null)
+              await CompanyManager.ReadAllCompaniesAsync();
+        }
 
         /// <summary>
         /// Create company open dialog window
@@ -96,13 +102,16 @@ namespace Planner.Components.Layout
         /// <returns></returns>
         public async Task CreateBranchAsync(CompanyModel company)
         {
-            if (CustomDialogService == null || CompanyManager == null)
+            if (CustomDialogService == null)
                 return;
 
             var result = await CustomDialogService.CreateItemDialog<CreateCompany>("Добавить РУЭС", []);
 
             if (result.Item1 && result.Item2 is CompanyModel comp)
-                CompanyManager?.Items?.FirstOrDefault(i => i.Id == company.Id)?.Branches.Add(new BranchModel { Name = comp.Name });
+                CompanyManager?.Items?.FirstOrDefault(i => i.Name == company.Name)?.Branches.Add(new BranchModel { Name = comp.Name });
+
+            if(CompanyManager != null)
+                await CompanyManager.UpdateAsync(company);
 
             StateHasChanged();
         }
@@ -127,7 +136,7 @@ namespace Planner.Components.Layout
         /// <summary>
         /// Opening detail branch page
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="name"></param>
         public void OpenDetailsBranch(string name)
         {
             _navigation?.NavigateTo($"details/{name}", true);
