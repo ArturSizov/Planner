@@ -145,10 +145,28 @@ namespace Planner.DataAccessLayer
 
             try
             {
-                var collection = _database.GetCollection<CompanyDAO>(companiesDataCollectionName);
-                var a = collection.Update(item);
+                var foundItem = new CompanyDAO();
 
-                return Task.FromResult(1);
+                if (item.Id == 0)
+                    foundItem = ReadAllAsync().Result.FirstOrDefault(x => x.Name == item.Name);                
+                else
+                    foundItem = ReadAllAsync().Result.FirstOrDefault(x => x.Id == item.Id);
+
+                if (foundItem != null)
+                {
+                    var company = new CompanyDAO
+                    {
+                        Id = foundItem.Id,
+                        Name = item.Name,
+                        Branches = item.Branches
+                    };
+
+                    var collection = _database.GetCollection<CompanyDAO>(companiesDataCollectionName).Update(company);
+
+                    return Task.FromResult(1);
+                }
+
+                return Task.FromResult(0);
             }
             catch (Exception ex)
             {

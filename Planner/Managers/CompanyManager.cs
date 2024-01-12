@@ -31,15 +31,8 @@ namespace Planner.Managers
         /// <inheritdoc/>
         public Task<int> CreateAsync(CompanyModel item)
         {
-            var company = new CompanyModel
-            {
-                Id = Items.Max(x => x.Id)+1,
-                Name = item.Name,
-                Branches = item.Branches
-            };
-
-            Items.Add(company);
-            return _dataProvider.CreateAsync(company.ToDAO());
+            Items.Add(item);
+            return _dataProvider.CreateAsync(item.ToDAO());
         }
 
         /// <inheritdoc/>
