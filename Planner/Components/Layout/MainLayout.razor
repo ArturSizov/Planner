@@ -1,4 +1,5 @@
-﻿<MudThemeProvider />
+﻿
+<MudThemeProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
@@ -7,13 +8,13 @@
 <MudLayout>
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        Planner
+        @Name
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen">
-        <NavMenu/>
+        <NavMenu />
     </MudDrawer>
     <MudMainContent>
-        <MudContainer>
+        <MudContainer Class="pa-1">
             @Body
         </MudContainer>
     </MudMainContent>

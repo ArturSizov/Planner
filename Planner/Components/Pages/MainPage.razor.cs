@@ -5,12 +5,33 @@ using Planner.Models;
 namespace Planner.Components.Pages
 {
     /// <summary>
-    /// Branch page 
+    /// Main page 
     /// </summary>
     partial class MainPage
     {
-        public string Title => "Planner";
+        /// <summary>
+        /// Page navigation
+        /// </summary>
+        [Inject] private NavigationManager? _navigation { get; set; }
 
-        public string Text => "Hello my app";
+        /// <summary>
+        /// Branch model
+        /// </summary>
+        public BranchModel Branch { get; set; } = new();
+
+        /// <summary>
+        /// Company data manager
+        /// </summary>
+        [Inject] private IDataManager<CompanyModel>? _companyManager { get; set; }
+
+        /// <summary>
+        /// Initialized page
+        /// </summary>
+        protected override void OnInitialized()
+        {
+            if (_companyManager != null)
+                Branch = _companyManager.Items[0].Branches[0];
+            _navigation?.NavigateTo($"details/{Branch.Name}");
+        }
     }
 }

@@ -2,7 +2,9 @@
 using MudBlazor;
 using Planner.Abstractions;
 using Planner.Components.Dialogs;
+using Planner.Components.Pages;
 using Planner.Models;
+using System.Xml.Linq;
 
 namespace Planner.Components.Layout
 {
@@ -11,7 +13,7 @@ namespace Planner.Components.Layout
         /// <summary>
         /// Dialog service
         /// </summary>
-        [Inject] public ICustomDialogService? CustomDialogService { get; set; }
+        [Inject] private ICustomDialogService? _customDialogService { get; set; }
 
         /// <summary>
         /// Company data manager
@@ -38,10 +40,10 @@ namespace Planner.Components.Layout
         /// </summary>
         public async Task CreateCompanyAsync()
         {
-            if (CustomDialogService == null)
+            if (_customDialogService == null)
                 return;
 
-            var result = await CustomDialogService.CreateItemDialog<CreateCompany>("Добавить ЗУЭС", []);
+            var result = await _customDialogService.CreateItemDialog<CreateCompany>("Добавить ЗУЭС", []);
 
             var company = result.Item2 as CompanyModel;
 
@@ -58,7 +60,7 @@ namespace Planner.Components.Layout
         /// <returns></returns>
         public async Task EditCompanyAsync(CompanyModel company)
         {
-            if (CustomDialogService == null)
+            if (_customDialogService == null)
                 return;
 
             var item = new CompanyModel
@@ -73,7 +75,7 @@ namespace Planner.Components.Layout
                 { x => x.Company, item }
             };
 
-            var result = await CustomDialogService.CreateItemDialog<CreateCompany>("Редактировать ЗУЭС", parameters);
+            var result = await _customDialogService.CreateItemDialog<CreateCompany>("Редактировать ЗУЭС", parameters);
 
             if (result.Item1 && company != null && CompanyManager != null)
             {
@@ -102,10 +104,10 @@ namespace Planner.Components.Layout
         /// <returns></returns>
         public async Task CreateBranchAsync(CompanyModel company)
         {
-            if (CustomDialogService == null)
+            if (_customDialogService == null)
                 return;
 
-            var result = await CustomDialogService.CreateItemDialog<CreateCompany>("Добавить РУЭС", []);
+            var result = await _customDialogService.CreateItemDialog<CreateCompany>("Добавить РУЭС", []);
 
             if (result.Item1 && result.Item2 is CompanyModel comp)
                 CompanyManager?.Items?.FirstOrDefault(i => i.Name == company.Name)?.Branches.Add(new BranchModel { Name = comp.Name });
@@ -123,9 +125,9 @@ namespace Planner.Components.Layout
         /// <returns></returns>
         public async Task DeleteCompanyAsync(CompanyModel company)
         {
-            if (CustomDialogService == null)
+            if (_customDialogService == null)
                 return;
-            var result = await CustomDialogService.DeleteItemDialog(company.Name);
+            var result = await _customDialogService.DeleteItemDialog(company.Name);
 
             if (result && company != null && CompanyManager != null)
                 await CompanyManager.DeleteAsync(company);
@@ -140,7 +142,8 @@ namespace Planner.Components.Layout
         public void OpenDetailsBranch(string name)
         {
             _navigation?.NavigateTo($"details/{name}", true);
-            StateHasChanged();
+
+           StateHasChanged();
         }
     }
 }
