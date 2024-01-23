@@ -9,7 +9,9 @@ namespace Planner.Components.Layout
         /// </summary>
         [Parameter] public string Name { get; set; } = string.Empty;
 
-
+        /// <summary>
+        /// Drawer open
+        /// </summary>
         bool _drawerOpen = true;
 
         /// <summary>
@@ -22,6 +24,7 @@ namespace Planner.Components.Layout
 
         protected override void OnParametersSet()
         {
+            //Intercepts the branch name
             if (Body != null)
             {
                 if ((Body.Target as RouteView)?.RouteData.RouteValues?.TryGetValue("name", out object? obj) == true)
