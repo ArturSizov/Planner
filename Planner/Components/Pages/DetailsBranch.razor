@@ -2,16 +2,22 @@
 
 <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Transparent">
     <MudTabPanel Text="План/Факт месяца" Icon="@Icons.Material.Filled.AddChart">
-        <MudStack Style="max-height: calc(100vh - (var(--mud-appbar-height) + 60px));overflow-y:scroll; margin-top:5px;">
-            @for (int i = 0; i < 15; i++)
+        <MudStack Style="max-height: calc(100vh - (var(--mud-appbar-height) + 110px));overflow-y:scroll; margin-top:5px;">
+            @foreach (var service in Branch.Services)
             {
-                <ServiceComponent />
+                <ServiceComponent Name="@service.Name" Plan="service.Plan" Fact="service.Fact" />
             }
         </MudStack>
+        <MudToolBar Class="justify-end">
+            <MudIconButton Icon="@Icons.Material.Outlined.Add" />
+            <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" />
+            <MudIconButton Icon="@Icons.Material.Outlined.Delete" OnClick="(async()=> await DeleteBranchAsync(Branch))" Color="Color.Error" />
+        </MudToolBar>
     </MudTabPanel>
     <MudTabPanel Text="План недели" Icon="@Icons.Material.Filled.TrendingUp">
 
     </MudTabPanel>
 </MudTabs>
+
 
 

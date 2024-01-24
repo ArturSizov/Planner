@@ -22,6 +22,9 @@ namespace Planner.Components.Layout
             _drawerOpen = !_drawerOpen;
         }
 
+        /// <summary>
+        /// Parameter set main layout
+        /// </summary>
         protected override void OnParametersSet()
         {
             //Intercepts the branch name
@@ -39,6 +42,8 @@ namespace Planner.Components.Layout
                             Name = "Planner";
                     }
                 }
+                else
+                    Name = "Planner";
             }
         }
     }

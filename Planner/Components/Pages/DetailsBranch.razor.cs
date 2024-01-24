@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using Planner.Abstractions;
 using Planner.Models;
+using static MudBlazor.CategoryTypes;
 
 namespace Planner.Components.Pages
 {
@@ -39,6 +41,30 @@ namespace Planner.Components.Pages
                     if (branch != null)
                         Branch = branch;
                 }
+        }
+
+        /// <summary>
+        /// Delete branch
+        /// </summary>
+        /// <param name="branch">CompanyModel</param>
+        /// <returns></returns>
+        public async Task DeleteBranchAsync(BranchModel branch)
+        {
+            if (_customDialogService == null)
+                return;
+            var result = await _customDialogService.DeleteItemDialog(branch.Name);
+
+            if (result && branch != null && CompanyManager != null)
+            {
+                var company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(c => c.Name == branch.Name));
+
+                if (company != null)
+                {
+                    company.Branches.Remove(branch);
+                    await CompanyManager.UpdateAsync(company);
+                }
+            }
+            StateHasChanged();
         }
     }
 }
