@@ -45,10 +45,13 @@ namespace Planner.Components.Layout
 
             var result = await _customDialogService.CreateItemDialog<CreateCompany>("Добавить ЗУЭС", []);
 
-            var company = result.Item2 as CompanyModel;
+            var companyName = result.Item2 as string;
 
-            if (result.Item1 && company != null)
-                CompanyManager?.CreateAsync(company);
+            if (result.Item1 && companyName != null)
+                CompanyManager?.CreateAsync(new CompanyModel
+                {
+                    Name = companyName
+                });
 
             StateHasChanged();
         }
@@ -63,32 +66,25 @@ namespace Planner.Components.Layout
             if (_customDialogService == null)
                 return;
 
-            var item = new CompanyModel
-            {
-                Name = company.Name,
-                Id = company.Id,
-                Branches = company.Branches
-            };
-
             var parameters = new DialogParameters<CreateCompany>
             {
-                { x => x.Company, item }
+                { x => x.CompanyName,  company.Name}
             };
 
             var result = await _customDialogService.CreateItemDialog<CreateCompany>("Редактировать ЗУЭС", parameters);
 
             if (result.Item1 && company != null && CompanyManager != null)
             {
-                if (item != null)
+                if (result.Item2 is string name)
                 {
-                    if (result.Item2 is CompanyModel comp)
+                    var newCompany = new CompanyModel
                     {
-                        item.Id = comp.Id;
-                        item.Name = comp.Name;
-                        item.Branches = comp.Branches;
-                    }
+                        Id = company.Id,
+                        Name = name,
+                        Branches = company.Branches
+                    };
 
-                    await CompanyManager.UpdateAsync(item);
+                    await CompanyManager.UpdateAsync(newCompany);
                 }
             }
             else 

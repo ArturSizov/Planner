@@ -1,6 +1,6 @@
 ﻿<MudDialog>
     <DialogContent>
-        <MudTextField T="string" @bind-Value="@Company.Name" Label="Название компании"
+        <MudTextField T="string" @bind-Value="@CompanyName" Label="Название компании"
                       Validation="@(new Func<string, IEnumerable<string>>(NameStrength))" Immediate="true" />
     </DialogContent>
     <DialogActions>

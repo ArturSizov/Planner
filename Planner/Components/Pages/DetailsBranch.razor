@@ -9,9 +9,9 @@
             }
         </MudStack>
         <MudToolBar Class="justify-end">
-            <MudIconButton Icon="@Icons.Material.Outlined.Add" />
-            <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" />
-            <MudIconButton Icon="@Icons.Material.Outlined.Delete" OnClick="(async()=> await DeleteBranchAsync(Branch))" Color="Color.Error" />
+            <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="(async()=> await CreateServiceAsync())" />
+            <MudIconButton Icon="@Icons.Material.Outlined.Edit" OnClick="(async()=> await EditBranchAsync())" Color="Color.Success" />
+            <MudIconButton Icon="@Icons.Material.Outlined.Delete" OnClick="(async()=> await DeleteBranchAsync())" Color="Color.Error" />
         </MudToolBar>
     </MudTabPanel>
     <MudTabPanel Text="План недели" Icon="@Icons.Material.Filled.TrendingUp">

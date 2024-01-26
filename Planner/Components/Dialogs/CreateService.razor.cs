@@ -1,10 +1,15 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Planner.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Planner.Components.Dialogs
 {
-    public partial class CreateCompany
+    public partial class CreateService
     {
         /// <summary>
         /// Mud Dialog Instance
@@ -14,7 +19,7 @@ namespace Planner.Components.Dialogs
         /// <summary>
         /// Item name parameter
         /// </summary>
-        [Parameter] public string CompanyName { get; set; } = string.Empty;
+        [Parameter] public ServiceModel Service { get; set; } = new();
 
         /// <summary>
         /// Validation of the OK button
@@ -25,7 +30,7 @@ namespace Planner.Components.Dialogs
         /// <summary>
         /// Ok method
         /// </summary>
-        public void Submit() => MudDialog?.Close(CompanyName);
+        public void Submit() => MudDialog?.Close(Service);
 
 
         /// <summary>

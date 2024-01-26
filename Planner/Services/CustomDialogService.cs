@@ -47,13 +47,13 @@ namespace Planner.Services
             var parameters = new DialogParameters<CustomMudDialog>
             {
                 { x => x.ContentText, $"Вы действительно хотите удалить {item}?" },
-                { x => x.ButtonText, "Удалить" },
+                { x => x.ButtonText, "Да" },
                 { x => x.Color, MudBlazor.Color.Error }
             };
 
             var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.False };
 
-            var dialog = _dialogService.Show<CustomMudDialog>("Удалить", parameters, options);
+            var dialog = _dialogService.Show<CustomMudDialog>("Удаление", parameters, options);
 
             var result = await dialog.Result;
 
