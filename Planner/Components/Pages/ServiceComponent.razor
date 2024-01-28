@@ -1,24 +1,19 @@
-﻿<MudPaper Class="pa-1 m-1" Outlined="true">
+﻿
     <MudStack Row="true">
        <MudStack Spacing="1">
-            <MudText>Услуга: <b>@Name</b></MudText>
-            <MudText>План: <b>@Plan</b> шт</MudText>
+            <MudText>Услуга: <b>@Service.Name</b></MudText>
+            <MudText>План: <b>@Service.Plan</b> шт</MudText>
             <MudText>Факт:
-                <MudElement @bind-Ref="StringFactRef" value="@Fact" HtmlTag="input" Style="border:0; outline:0; padding:0px 1px; height:28px; width:30px; font-weight:bold" />
+                <MudElement @bind-Ref="StringFactRef" value="@Service.Fact" HtmlTag="input" Style="border:0; outline:0; padding:0px 1px; height:28px; width:30px; font-weight:bold" />
                 шт</MudText>
             <MudText>До 85%: <b>12</b> шт</MudText>
             <MudText>До 100%: <b>22</b> шт</MudText>
        </MudStack>
         <MudStack Justify="Justify.Center" AlignItems="AlignItems.Center" Style="width:50px">
-            <MudIconButton OnClick="FocusRowFact" Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" Size="Size.Small" />
+            <MudIconButton OnClick="FocusRowFactAsync" Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" Size="Size.Small" />
        </MudStack>
     </MudStack>
 
-    <MudToolBar Class="justify-end">
-        <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" Variant="Variant.Filled" Size="Size.Small" Class="m-1" />
-        <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Variant="Variant.Filled" Size="Size.Small" Class="m-1" />
-    </MudToolBar>
-</MudPaper>
 
 
 

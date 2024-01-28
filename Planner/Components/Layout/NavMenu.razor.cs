@@ -2,9 +2,7 @@
 using MudBlazor;
 using Planner.Abstractions;
 using Planner.Components.Dialogs;
-using Planner.Components.Pages;
 using Planner.Models;
-using System.Xml.Linq;
 
 namespace Planner.Components.Layout
 {
@@ -105,8 +103,8 @@ namespace Planner.Components.Layout
 
             var result = await _customDialogService.CreateItemDialog<CreateCompany>("Добавить РУЭС", []);
 
-            if (result.Item1 && result.Item2 is CompanyModel comp)
-                CompanyManager?.Items?.FirstOrDefault(i => i.Name == company.Name)?.Branches.Add(new BranchModel { Name = comp.Name });
+            if (result.Item1 && result.Item2 is string name)
+                CompanyManager?.Items?.FirstOrDefault(x => x.Name == company.Name)?.Branches.Add(new BranchModel { Name = name });
 
             if(CompanyManager != null)
                 await CompanyManager.UpdateAsync(company);

@@ -5,7 +5,14 @@
         <MudStack Style="max-height: calc(100vh - (var(--mud-appbar-height) + 110px));overflow-y:scroll; margin-top:5px;">
             @foreach (var service in Branch.Services)
             {
-                <ServiceComponent Name="@service.Name" Plan="service.Plan" Fact="service.Fact" />
+                <MudPaper Class="pa-1 m-1" Outlined="true">
+                    <ServiceComponent Service="@service" />
+
+                    <MudToolBar Class="justify-end">
+                        <MudIconButton Icon="@Icons.Material.Outlined.Edit" OnClick="(async()=> await EditServiceAsync(service))" Color="Color.Success" Variant="Variant.Filled" Size="Size.Small" Class="m-1" />
+                        <MudIconButton Icon="@Icons.Material.Outlined.Delete" OnClick="(async()=> await DeleteServiceAsync(service))" Color="Color.Error" Variant="Variant.Filled" Size="Size.Small" Class="m-1" />
+                    </MudToolBar>
+                </MudPaper>
             }
         </MudStack>
         <MudToolBar Class="justify-end">

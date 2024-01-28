@@ -1,11 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Planner.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Planner.Components.Dialogs
 {
@@ -17,7 +12,7 @@ namespace Planner.Components.Dialogs
         [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
 
         /// <summary>
-        /// Item name parameter
+        /// Item parameter
         /// </summary>
         [Parameter] public ServiceModel Service { get; set; } = new();
 

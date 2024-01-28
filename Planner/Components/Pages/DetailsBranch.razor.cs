@@ -3,7 +3,6 @@ using MudBlazor;
 using Planner.Abstractions;
 using Planner.Components.Dialogs;
 using Planner.Models;
-using static MudBlazor.Icons.Custom;
 
 namespace Planner.Components.Pages
 {
@@ -80,14 +79,13 @@ namespace Planner.Components.Pages
 
             if (result.Item1 && result.Item2 is ServiceModel service && CompanyManager != null)
             {
-                var company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(c => c.Name == Branch.Name));
+                var company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(b => b.Name == Branch.Name));
 
                 if (company != null)
                 {
                     Branch.Services.Add(service);
                     await CompanyManager.UpdateAsync(company);
-                }
-                
+                }               
             }
 
             StateHasChanged();
@@ -104,25 +102,108 @@ namespace Planner.Components.Pages
 
             var parameters = new DialogParameters<CreateCompany>
             {
-                { "branchName", Branch.Name }
+                { x => x.CompanyName,  Branch.Name}
             };
 
             var result = await _customDialogService.CreateItemDialog<CreateCompany>("Редактировать РУЭС", parameters);
-
-            var d = result.Item2;
 
             if (result.Item1 && Branch != null && CompanyManager != null)
             {
                 var company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(c => c.Name == Branch.Name));
 
-                if (company != null)
-                    await CompanyManager.UpdateAsync(company);
+                if (result.Item2 is string name && company != null)
+                {
+                    var branch = company.Branches.FirstOrDefault(x => x.Name == Branch.Name);
 
+                    if(branch != null)
+                    {
+                        branch.Name = name;
+                        branch.Services = Branch.Services;
+
+                        await CompanyManager.UpdateAsync(company);
+                    }
+                }
             }
             else
                 return;
 
             StateHasChanged();
+        }
+
+        /// <summary>
+        /// Edit service
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns>
+        public async Task EditServiceAsync(ServiceModel service)
+        {
+            if (_customDialogService == null)
+                return;
+
+            var editService = new ServiceModel
+            {
+                Plan = service.Plan,
+                Fact = service.Fact,
+                Name = service.Name
+            };
+
+            if (CompanyManager != null)
+            {
+                var company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(b => b.Name == Branch.Name));
+
+                var parameters = new DialogParameters<CreateService>
+                {
+                    { x => x.Service,  editService}
+                };
+
+                var result = await _customDialogService.CreateItemDialog<CreateService>("Редактировать услугу", parameters);
+
+                if (result.Item1 && service != null && CompanyManager != null)
+                {
+                    if (result.Item2 is ServiceModel newService && company != null)
+                    {
+                        if (newService != null)
+                        {
+                            service.Name = newService.Name;
+                            service.Plan = newService.Plan;
+                            service.Fact = newService.Fact;
+                        }
+
+                        await CompanyManager.UpdateAsync(company);
+                    }
+
+                }
+                else
+                    return;
+
+            }
+
+            StateHasChanged();
+        }
+
+        /// <summary>
+        /// Delete service
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns>
+        public async Task DeleteServiceAsync(ServiceModel service)
+        {
+            if (_customDialogService == null)
+                return;
+            var result = await _customDialogService.DeleteItemDialog(service.Name);
+
+            if (result && CompanyManager != null)
+            {
+                var company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(b => b.Name == Branch.Name));
+
+                if (company != null)
+                {
+                    Branch.Services.Remove(service);
+                    await CompanyManager.UpdateAsync(company);
+                }
+
+                StateHasChanged();
+            }
         }
     }
 }

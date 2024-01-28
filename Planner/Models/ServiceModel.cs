@@ -6,8 +6,8 @@
     public class ServiceModel : BindableObject
     {
         private string _name = string.Empty;
-        private int _plan;
-        private int _fact;
+        private int _plan = 0;
+        private int _fact = 0;
 
         public string Name
         {
