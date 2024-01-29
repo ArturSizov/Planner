@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using MudBlazor;
-using Planner.Abstractions;
-using Planner.Components.Dialogs;
 using Planner.Models;
 
 namespace Planner.Components.Pages

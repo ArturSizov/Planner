@@ -6,8 +6,8 @@
     public class ServiceModel : BindableObject
     {
         private string _name = string.Empty;
-        private int _plan = 0;
-        private int _fact = 0;
+        private int? _plan;
+        private int? _fact;
 
         public string Name
         {
@@ -18,7 +18,7 @@
                 OnPropertyChanged();
             }
         }
-        public int Plan
+        public int? Plan
         {
             get => _plan;
             set
@@ -27,7 +27,7 @@
                 OnPropertyChanged();
             }
         }
-        public int Fact
+        public int? Fact
         {
             get => _fact;
             set

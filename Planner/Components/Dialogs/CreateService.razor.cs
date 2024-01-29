@@ -21,7 +21,6 @@ namespace Planner.Components.Dialogs
         /// </summary>
         public bool Success { get; set; } = true;
 
-
         /// <summary>
         /// Ok method
         /// </summary>
@@ -41,18 +40,35 @@ namespace Planner.Components.Dialogs
         public IEnumerable<string> NameStrength(string name)
         {
             if (name.Length <= 0)
-            {
-                Success = true;
                 yield return "Не может быть пустым";
-            }
+
             if (name.Length < 2)
-            {
-                Success = true;
                 yield return "Не менее 2-ух символов";
-            }
-            else
-                Success = false;
+
+            SuccessSet();
         }
 
+        /// <summary>
+        /// Number validation
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public IEnumerable<string> NumberStrength(int? number)
+        {
+            if (number == null)
+                yield return "Не может быть пустым";
+
+            SuccessSet();
+        }
+
+        /// <summary>
+        /// Disabled/enabled button
+        /// </summary>
+        private void SuccessSet()
+        {
+            if (string.IsNullOrEmpty(Service.Name) || Service.Plan == null || Service.Fact == null || Service.Name.Length < 2)
+                Success = true;
+            else Success = false;
+        }
     }
 }
