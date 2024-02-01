@@ -2,10 +2,10 @@
     <DialogContent>
         <MudTextField T="string" @bind-Value="@Service.Name" Label="Название услуги"
                       Validation="@(new Func<string, IEnumerable<string>>(NameStrength))" Immediate="true" />
-        <MudNumericField T="int?" @bind-Value="@Service.Plan" Label="План"
-                         Validation="@(new Func<int?, IEnumerable<string>>(NumberStrength))" Immediate="true"/>
-        <MudNumericField T="int?" @bind-Value="@Service.Fact" Label="Факт на текущую дату"
-                         Validation="@(new Func<int?, IEnumerable<string>>(NumberStrength))" Immediate="true" />
+        <MudNumericField T="ushort?" @bind-Value="@Service.Plan" Label="План"
+                         Validation="@(new Func<ushort?, IEnumerable<string>>(NumberStrength))" Immediate="true" />
+        <MudNumericField T="ushort?" @bind-Value="@Service.Fact" Label="Факт на текущую дату"
+                         Validation="@(new Func<ushort?, IEnumerable<string>>(NumberStrength))" Immediate="true" />
     </DialogContent>
     <DialogActions>
         <MudButton Variant="Variant.Filled" Color="Color.Inherit" OnClick="Cancel">Отмена</MudButton>

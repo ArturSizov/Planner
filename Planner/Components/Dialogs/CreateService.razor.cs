@@ -53,7 +53,7 @@ namespace Planner.Components.Dialogs
         /// </summary>
         /// <param name="number"></param>
         /// <returns></returns>
-        public IEnumerable<string> NumberStrength(int? number)
+        public IEnumerable<string> NumberStrength(ushort? number)
         {
             if (number == null)
                 yield return "Не может быть пустым";
