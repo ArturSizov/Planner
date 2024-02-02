@@ -27,6 +27,15 @@ namespace Planner.Components.Pages
         /// </summary>
         public int OneHundred { get; set; }
 
+        /// <summary>
+        /// Color eighty five
+        /// </summary>
+        public string ColorEightyFive { get; set; } = "lime";
+
+        /// <summary>
+        /// Color one hundred
+        /// </summary>
+        public string ColorOneHundred { get; set; } = "lime";
 
         /// <summary>
         /// Row fact element reference
@@ -43,6 +52,11 @@ namespace Planner.Components.Pages
             await StringFactRef.FocusAsync();
         }
 
+        /// <summary>
+        /// Update company
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public async Task UpdateCompanyAsync(string name)
         {
             if(_companyManager != null)
@@ -57,11 +71,25 @@ namespace Planner.Components.Pages
             }
         }
 
-        protected override void OnParametersSet()
+        /// <summary>
+        /// Number validation
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public IEnumerable<string> NumberStrength(ushort? number)
         {
-            UpdateDate();
+            if (number == null)
+                yield return "Не может быть пустым";
         }
 
+        protected override void OnParametersSet()
+        {
+            UpdateDate();            
+        }
+
+        /// <summary>
+        /// Updates data when the fact field changes/when the page is loaded
+        /// </summary>
         private void UpdateDate()
         {
             if (Service.Plan != null && Service.Fact != null)
@@ -75,7 +103,29 @@ namespace Planner.Components.Pages
 
                 if (OneHundred < 0)
                     OneHundred = 0;
+
+                SetColor();
             }
+        }
+
+        /// <summary>
+        /// Set color eighty five/one hundred
+        /// </summary>
+        private void SetColor()
+        {
+            var minPlanOfDaily85 = Convert.ToDouble(Service.Plan * 85 / 100) / Convert.ToDouble(DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month));
+
+            var minPlanOfDaily100 = Convert.ToDouble(Service.Plan) / Convert.ToDouble(DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month));
+
+            if (Service.Fact <= DateTime.Today.Day * minPlanOfDaily85)
+                ColorEightyFive = "red";
+            else
+                 ColorEightyFive = "lime";
+
+            if (Service.Fact <= DateTime.Today.Day * minPlanOfDaily100)
+                ColorOneHundred = "red";
+            else
+                ColorOneHundred = "lime";
         }
     }
 }

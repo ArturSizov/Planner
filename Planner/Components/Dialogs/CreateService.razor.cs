@@ -67,8 +67,11 @@ namespace Planner.Components.Dialogs
         private void SuccessSet()
         {
             if (string.IsNullOrEmpty(Service.Name) || Service.Plan == null || Service.Fact == null || Service.Name.Length < 2)
+            {
                 Success = true;
-            else Success = false;
+                return;
+            }
+            Success = false;
         }
     }
 }
