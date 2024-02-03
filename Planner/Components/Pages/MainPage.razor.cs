@@ -29,10 +29,12 @@ namespace Planner.Components.Pages
         /// </summary>
         protected override void OnInitialized()
         {
-            if (_companyManager != null && _companyManager.Items.Count > 1)
+            if (_companyManager != null && _companyManager.Items.Count >= 1 && _companyManager.Items != null)
             {
-                Branch = _companyManager.Items[0].Branches[0];
-                _navigation?.NavigateTo($"details/{Branch.Name}");
+                Branch = _companyManager.Items.SelectMany(x => x.Branches).FirstOrDefault(b => b.Default == true);
+
+                if (Branch == null)
+                    Branch = new();
             }
         }              
     }

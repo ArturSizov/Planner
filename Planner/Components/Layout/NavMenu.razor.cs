@@ -23,16 +23,7 @@ namespace Planner.Components.Layout
         /// </summary>
         [Inject] private NavigationManager? _navigation { get; set; }
 
-        /// <summary>
-        /// Initialized NavMenu
-        /// </summary>
-        /// <returns></returns>
-        protected override async Task OnInitializedAsync()
-        {
-           if(CompanyManager != null)
-              await CompanyManager.ReadAllCompaniesAsync();
-        }
-
+ 
         /// <summary>
         /// Create company open dialog window
         /// </summary>

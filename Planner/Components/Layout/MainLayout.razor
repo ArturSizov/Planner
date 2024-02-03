@@ -10,7 +10,8 @@
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         @Name
         <MudSpacer />
-        <MudIcon Icon="@Icons.Material.Filled.CurrencyRuble" Color="Color.Inherit" />
+        <MudIconButton Icon="@Icons.Material.Filled.Star" Color="@ColorBranch" Class="mr-1" OnClick="(async()=> await SetDefaultBranch())"/>      
+        <MudIcon Icon="@Icons.Material.Filled.Troubleshoot" Color="Color.Inherit" />
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen">
         <NavMenu />

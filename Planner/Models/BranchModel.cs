@@ -9,14 +9,26 @@ namespace Planner.Models
     {
         private string _name = string.Empty;
 
-        private ObservableCollection<ServiceModel> _services = [];
+        private bool @default;
 
+        private ObservableCollection<ServiceModel> _services = [];
+        
         public string Name
         {
             get => _name;
             set
             {
                 _name = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool Default
+        {
+            get => @default;
+            set
+            {
+                @default = value;
                 OnPropertyChanged();
             }
         }

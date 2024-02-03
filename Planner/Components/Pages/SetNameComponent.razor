@@ -1,8 +1,0 @@
-﻿
-<MudButton OnClick="@(()=> Event.InvokeAsync(Name))"></MudButton>
-
-@code {
-    string Name = "Artur";
-
-    [Parameter] public EventCallback<string> Event{ get; set; }
-}

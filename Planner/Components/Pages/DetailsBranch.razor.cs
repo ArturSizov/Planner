@@ -119,6 +119,7 @@ namespace Planner.Components.Pages
                     {
                         branch.Name = name;
                         branch.Services = Branch.Services;
+                        branch.Default = Branch.Default;
 
                         await CompanyManager.UpdateAsync(company);
                     }
