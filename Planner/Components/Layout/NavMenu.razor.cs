@@ -37,12 +37,15 @@ namespace Planner.Components.Layout
             var companyName = result.Item2 as string;
 
             if (result.Item1 && companyName != null)
+            {
                 CompanyManager?.CreateAsync(new CompanyModel
                 {
                     Name = companyName
                 });
+                _navigation?.NavigateTo("/", true);
 
-            StateHasChanged();
+                StateHasChanged();
+            }               
         }
 
         /// <summary>
@@ -95,12 +98,22 @@ namespace Planner.Components.Layout
             var result = await _customDialogService.CreateItemDialog<CreateCompany>("Добавить РУЭС", []);
 
             if (result.Item1 && result.Item2 is string name)
-                CompanyManager?.Items?.FirstOrDefault(x => x.Name == company.Name)?.Branches.Add(new BranchModel { Name = name });
+            {
+                CompanyManager?.Items?.FirstOrDefault(x => x.Name == company.Name)?.
+                    Branches.Add(
+                    new BranchModel
+                    {
+                        Name = name,
+                        Default = !CompanyManager.Items.Any(x => x.Branches.Any(b => b.Default == true))
+                    });
 
-            if(CompanyManager != null)
-                await CompanyManager.UpdateAsync(company);
+                if (CompanyManager != null)
+                    await CompanyManager.UpdateAsync(company);
 
-            StateHasChanged();
+                _navigation?.NavigateTo($"details/{name}", true);
+
+                StateHasChanged();
+            }           
         }
 
         /// <summary>
@@ -115,7 +128,11 @@ namespace Planner.Components.Layout
             var result = await _customDialogService.DeleteItemDialog(company.Name);
 
             if (result && company != null && CompanyManager != null)
+            {
                 await CompanyManager.DeleteAsync(company);
+
+                _navigation?.NavigateTo("/", true);
+            }
 
             StateHasChanged();
         }

@@ -1,0 +1,18 @@
+﻿<MudPaper Class="m-2" Style="background-color:#ADD8E6; padding:60px">
+
+    <MudOverlay @bind-Visible="IsVisibleOverlay" DarkBackground="true" AutoClose="false">
+        <MudIcon Icon="@Icons.Material.Outlined.NorthWest" Color="Color.Warning" Style="width:155px; height:155px" />
+        <MudText>Продолжайте работу здесь</MudText>
+        <MudButton>Понятно</MudButton>
+    </MudOverlay>
+    <MudStack>
+        <div class="d-flex justify-center align-center">
+            <MudIcon Icon="@Icons.Material.Filled.Troubleshoot" Color="Color.Success" Style="height:130px; width:130px; position:static"/>
+        </div>
+        <MudText Color="Color.Surface" GutterBottom="true" Typo="Typo.h5" Align="Align.Center">Добро пожаловать в Planner</MudText>
+    </MudStack>
+    <div class="d-flex justify-center align-center">
+        <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="@(async() => await CreateCompanyAsync())" Class="m-2">@AddButtonText</MudButton>
+    </div>
+</MudPaper>
+

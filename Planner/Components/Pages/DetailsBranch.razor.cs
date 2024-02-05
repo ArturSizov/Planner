@@ -24,6 +24,11 @@ namespace Planner.Components.Pages
         [Inject] private ICustomDialogService? _customDialogService { get; set; }
 
         /// <summary>
+        /// Page navigation
+        /// </summary>
+        [Inject] private NavigationManager? _navigation { get; set; }
+
+        /// <summary>
         /// Company data manager
         /// </summary>
         [Inject] public IDataManager<CompanyModel>? CompanyManager { get; set; }
@@ -60,7 +65,18 @@ namespace Planner.Components.Pages
                 if (company != null)
                 {
                     company.Branches.Remove(Branch);
+
+                    if(Branch.Default)
+                    {
+                        foreach (var branch in company.Branches)
+                        {
+                            branch.Default = true;
+                            break;
+                        }
+                    }
+
                     await CompanyManager.UpdateAsync(company);
+                    _navigation?.NavigateTo("/", true);
                 }
             }
             StateHasChanged();
@@ -122,6 +138,7 @@ namespace Planner.Components.Pages
                         branch.Default = Branch.Default;
 
                         await CompanyManager.UpdateAsync(company);
+                        _navigation?.NavigateTo($"details/{name}", true);
                     }
                 }
             }
@@ -172,7 +189,6 @@ namespace Planner.Components.Pages
 
                         await CompanyManager.UpdateAsync(company);
                     }
-
                 }
                 else
                     return;
@@ -201,6 +217,7 @@ namespace Planner.Components.Pages
                 {
                     Branch.Services.Remove(service);
                     await CompanyManager.UpdateAsync(company);
+                    _navigation?.NavigateTo("/", true);
                 }
 
                 StateHasChanged();

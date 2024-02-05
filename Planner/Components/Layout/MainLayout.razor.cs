@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using Planner.Abstractions;
+using Planner.Auxiliary;
 using Planner.Models;
 using Color = MudBlazor.Color;
 
@@ -11,7 +13,12 @@ namespace Planner.Components.Layout
         /// <summary>
         /// Company data manager
         /// </summary>
-        [Inject] public IDataManager<CompanyModel>? _companyManager { get; set; }
+        [Inject] private IDataManager<CompanyModel>? _companyManager { get; set; }
+
+        /// <summary>
+        /// Snackbar
+        /// </summary>
+        [Inject] ISnackbar? _snackbar { get; set; }
 
         /// <summary>
         /// Company name
@@ -21,29 +28,35 @@ namespace Planner.Components.Layout
         /// <summary>
         /// Drawer open
         /// </summary>
-        bool _drawerOpen = true;
+        public bool DrawerOpen = true;
 
         /// <summary>
         /// Company model
         /// </summary>
-        private CompanyModel? _company = new();
+        private CompanyModel? _company;
 
         /// <summary>
         /// Branch model
         /// </summary>
-        private BranchModel? _branch = new();
+        private BranchModel? _branch;
 
+        
         /// <summary>
         /// Color branch star
         /// </summary>
         public Color ColorBranch { get; set; } = Color.Default;
 
         /// <summary>
+        /// Enabled/disabled status star
+        /// </summary>
+        public bool StatusStar { get; set; } = false;
+
+        /// <summary>
         /// Open/close menu
         /// </summary>
         public void DrawerToggle()
         {
-            _drawerOpen = !_drawerOpen;
+            DrawerOpen = !DrawerOpen;
         }
 
         /// <summary>
@@ -64,7 +77,7 @@ namespace Planner.Components.Layout
                         branch.Services = branch.Services;
                         branch.Default = false;
 
-                        if(branch.Name == Name)
+                        if (branch.Name == Name)
                         {
                             branch.Name = branch.Name;
                             branch.Services = branch.Services;
@@ -72,6 +85,11 @@ namespace Planner.Components.Layout
                         }
 
                         await _companyManager.UpdateAsync(company);
+
+                        if (_snackbar == null)
+                            return;
+                        _snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomCenter;
+                        _snackbar.Add($"{Name} выбран по умолчанию", Severity.Info);
                     }
                 }
             }
@@ -82,24 +100,6 @@ namespace Planner.Components.Layout
         /// </summary>
         protected override void OnParametersSet()
         {
-            //Intercepts the branch name
-            if (Body != null)
-            {
-                if ((Body.Target as RouteView)?.RouteData.RouteValues?.TryGetValue("name", out object? obj) == true)
-                {
-                    if (obj != null)
-                    {
-                        var res = obj as string;
-
-                        if (res != null)
-                        {
-                            Name = res;
-                            return;
-                        }                      
-                    }
-                }
-            }
-
             if (_companyManager != null && Name == null)
             {
                 _company = _companyManager.Items.FirstOrDefault(x => x.Branches.Any(c => c.Default == true));
@@ -113,8 +113,11 @@ namespace Planner.Components.Layout
                     ColorBranch = Color.Warning;
                 }
                 else
+                {
                     Name = "Planner";
-            }            
+                    StatusStar = true;
+                }
+            }
         }
 
         /// <summary>
@@ -123,8 +126,36 @@ namespace Planner.Components.Layout
         /// <returns></returns>
         protected override async Task OnInitializedAsync()
         {
-            if(_companyManager != null)
-               await _companyManager.ReadAllCompaniesAsync();
+            if (_companyManager != null)
+            {
+                await _companyManager.ReadAllCompaniesAsync();
+
+                //Intercepts the branch name
+                if (Body != null)
+                {
+                    if ((Body.Target as RouteView)?.RouteData.RouteValues?.TryGetValue("name", out object? obj) == true)
+                    {
+                        if (obj != null)
+                        {
+                            var res = obj as string;
+
+                            if (res != null)
+                            {
+                                Name = res;
+
+                                _company = _companyManager.Items.FirstOrDefault(x => x.Branches.Any(c => c.Name == Name));
+
+                                _branch = _company?.Branches.FirstOrDefault(x => x.Name == Name);
+
+                               if(_branch != null)
+                                    if (_branch.Default)
+                                        ColorBranch = Color.Warning;
+                            }
+                        }
+                    }
+                }
+
+            }               
         }
     }
 }

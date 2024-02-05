@@ -10,28 +10,22 @@ namespace Planner.Components.Pages
     partial class MainPage
     {
         /// <summary>
-        /// Page navigation
-        /// </summary>
-        [Inject] private NavigationManager? _navigation { get; set; }
-
-        /// <summary>
         /// Branch model
         /// </summary>
-        public BranchModel Branch { get; set; } = new();
-
+        public BranchModel? Branch { get; set; } = new();
         /// <summary>
         /// Company data manager
         /// </summary>
-        [Inject] private IDataManager<CompanyModel>? _companyManager { get; set; }
+        [Inject] public IDataManager<CompanyModel>? CompanyManager { get; set; }
 
         /// <summary>
         /// Initialized page
         /// </summary>
         protected override void OnInitialized()
         {
-            if (_companyManager != null && _companyManager.Items.Count >= 1 && _companyManager.Items != null)
+            if (CompanyManager != null && CompanyManager.Items.Count >= 1 && CompanyManager.Items != null)
             {
-                Branch = _companyManager.Items.SelectMany(x => x.Branches).FirstOrDefault(b => b.Default == true);
+                Branch = CompanyManager.Items.SelectMany(x => x.Branches).FirstOrDefault(b => b.Default == true);
 
                 if (Branch == null)
                     Branch = new();

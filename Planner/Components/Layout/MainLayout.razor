@@ -1,5 +1,4 @@
-﻿
-<MudThemeProvider />
+﻿<MudThemeProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
@@ -8,12 +7,12 @@
 <MudLayout>
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        @Name
+            @Name
         <MudSpacer />
-        <MudIconButton Icon="@Icons.Material.Filled.Star" Color="@ColorBranch" Class="mr-1" OnClick="(async()=> await SetDefaultBranch())"/>      
+        <MudIconButton Icon="@Icons.Material.Filled.Star" Color="@ColorBranch" Class="mr-1" Disabled="@StatusStar" OnClick="(async()=> await SetDefaultBranch())"/>      
         <MudIcon Icon="@Icons.Material.Filled.Troubleshoot" Color="Color.Inherit" />
     </MudAppBar>
-    <MudDrawer @bind-Open="@_drawerOpen">
+    <MudDrawer @bind-Open="@DrawerOpen">
         <NavMenu />
     </MudDrawer>
     <MudMainContent>
@@ -22,3 +21,4 @@
         </MudContainer>
     </MudMainContent>
 </MudLayout>
+
