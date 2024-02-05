@@ -10,7 +10,7 @@ namespace Planner.Components.Pages
         /// <summary>
         /// Company data manager
         /// </summary>
-        [Inject] public IDataManager<CompanyModel>? _companyManager { get; set; }
+        [Inject] private IDataManager<CompanyModel>? _companyManager { get; set; }
 
         /// <summary>
         /// Dialog service
@@ -21,7 +21,10 @@ namespace Planner.Components.Pages
         /// Page navigation
         /// </summary>
         [Inject] private NavigationManager? _navigation { get; set; }
-
+        
+        /// <summary>
+        /// Company name
+        /// </summary>
         private string? _companyName;
 
         /// <summary>
@@ -29,7 +32,6 @@ namespace Planner.Components.Pages
         /// </summary>
         public string AddButtonText { get; set; } = "Добавить ЗУЭС";
 
-        public bool IsVisibleOverlay { get; set; }
 
         /// <summary>
         /// Create company open dialog window
