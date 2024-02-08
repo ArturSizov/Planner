@@ -20,22 +20,47 @@ namespace Planner.Components.Pages
         /// <summary>
         /// 85 %
         /// </summary>
-        public int EightyFive { get; set; }
+        public int? EightyFive { get; set; }
 
         /// <summary>
         /// 100 %
         /// </summary>
-        public int OneHundred { get; set; }
+        public int? OneHundred { get; set; }
+
+        /// <summary>
+        /// Fact as of today
+        /// </summary>
+        public int FactOfToday { get; set; }
+
+        /// <summary>
+        /// Target percentage for the current date
+        /// </summary>
+        public int TargetPercentage { get; set; }
+
+        /// <summary>
+        /// Fact difference for current date
+        /// </summary>
+        public int? DeltaFact { get; set; }
 
         /// <summary>
         /// Color eighty five
         /// </summary>
-        public string ColorEightyFive { get; set; } = "lime";
+        public string? ColorEightyFive { get; set; }
 
         /// <summary>
         /// Color one hundred
         /// </summary>
-        public string ColorOneHundred { get; set; } = "lime";
+        public string? ColorOneHundred { get; set; }
+
+        /// <summary>
+        /// Color fact of today
+        /// </summary>
+        public string? ColorFactOfToday { get; set; }
+
+        /// <summary>
+        /// Color delta fact
+        /// </summary>
+        public string? ColorDeltaFact { get; set; }
 
         /// <summary>
         /// Row fact element reference
@@ -94,9 +119,27 @@ namespace Planner.Components.Pages
         {
             if (Service.Plan != null && Service.Fact != null)
             {
-                EightyFive = ((int)Service.Plan * 85 / 100) - (int)Service.Fact;
+                EightyFive = (Service.Plan * 85 / 100) - Service.Fact;
 
-                OneHundred = (int)Service.Plan - (int)Service.Fact;
+                OneHundred = Service.Plan - Service.Fact;
+
+                FactOfToday = Convert.ToInt32(Convert.ToDouble(Service.Fact) / Convert.ToDouble(Service.Plan) * 100);
+
+                var days = DateTime.Today.Day;
+
+                var lastDayOfMonth = DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month);
+
+                if (days == lastDayOfMonth)
+                    TargetPercentage = 100;
+                else
+                {
+                    if (days > 2)
+                        days--;
+
+                    TargetPercentage = Convert.ToInt32(days / Convert.ToDouble(lastDayOfMonth) * 100);
+                }
+
+                DeltaFact = Service.Fact - (Service.Plan * TargetPercentage / 100);
 
                 if (EightyFive < 0)
                     EightyFive = 0;
@@ -120,12 +163,22 @@ namespace Planner.Components.Pages
             if (Service.Fact <= DateTime.Today.Day * minPlanOfDaily85)
                 ColorEightyFive = "red";
             else
-                 ColorEightyFive = "lime";
+                 ColorEightyFive = "#32CD32";
 
             if (Service.Fact <= DateTime.Today.Day * minPlanOfDaily100)
                 ColorOneHundred = "red";
             else
-                ColorOneHundred = "lime";
+                ColorOneHundred = "#32CD32";
+
+            if (TargetPercentage > FactOfToday)
+                ColorFactOfToday = "red";
+            else
+                ColorFactOfToday = "#32CD32";
+
+            if (DeltaFact < 0)
+                ColorDeltaFact = "red";
+            else
+                ColorDeltaFact = "#32CD32";
         }
     }
 }

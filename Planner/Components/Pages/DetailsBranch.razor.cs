@@ -3,6 +3,7 @@ using MudBlazor;
 using Planner.Abstractions;
 using Planner.Components.Dialogs;
 using Planner.Models;
+using SwipeDirection = MudBlazor.SwipeDirection;
 
 namespace Planner.Components.Pages
 {
@@ -12,6 +13,11 @@ namespace Planner.Components.Pages
         /// Branch model
         /// </summary>
         public BranchModel Branch { get; set; } = new();
+
+        /// <summary>
+        /// Tab panel
+        /// </summary>
+        public MudTabs? Tabs { get; set; }
 
         /// <summary>
         /// Parameter branch name
@@ -217,11 +223,27 @@ namespace Planner.Components.Pages
                 {
                     Branch.Services.Remove(service);
                     await CompanyManager.UpdateAsync(company);
-                    _navigation?.NavigateTo("/", true);
                 }
 
                 StateHasChanged();
             }
+        }
+
+        /// <summary>
+        /// Screen swipe event
+        /// </summary>
+        /// <param name="args"></param>
+        public void HandleSwipeEnd(SwipeEventArgs args)
+        {
+            if (args.SwipeDirection == SwipeDirection.RightToLeft)
+            {
+                Tabs?.ActivatePanel("pn_two");
+                return;
+            }
+               
+            if (args.SwipeDirection == SwipeDirection.LeftToRight)
+                Tabs?.ActivatePanel("pn_one");
+
         }
     }
 }

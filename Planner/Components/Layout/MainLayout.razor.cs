@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Maui;
 using MudBlazor;
 using Planner.Abstractions;
 using Planner.Auxiliary;
 using Planner.Models;
 using Color = MudBlazor.Color;
+using SwipeDirection = MudBlazor.SwipeDirection;
 
 
 namespace Planner.Components.Layout
@@ -24,6 +26,11 @@ namespace Planner.Components.Layout
         /// Company name
         /// </summary>
         [Parameter] public string? Name { get; set; }
+
+        /// <summary>
+        /// Swipe direction
+        /// </summary>
+        public SwipeDirection SwipeDirection { get; set; }
 
         /// <summary>
         /// Drawer open
@@ -57,6 +64,20 @@ namespace Planner.Components.Layout
         public void DrawerToggle()
         {
             DrawerOpen = !DrawerOpen;
+        }
+
+        /// <summary>
+        /// Screen swipe event
+        /// </summary>
+        /// <param name="args"></param>
+        public void HandleSwipeEnd(SwipeEventArgs args)
+        {
+            if(args.SwipeDirection == SwipeDirection.LeftToRight)
+                DrawerOpen = true;
+
+            if (args.SwipeDirection == SwipeDirection.RightToLeft)
+                DrawerOpen = false;
+
         }
 
         /// <summary>

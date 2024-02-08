@@ -7,14 +7,18 @@
             <MudNumericField @bind-Value="@Service.Fact" @ref="StringFactRef" OnBlur="@(async()=> await UpdateCompanyAsync(Service.Name))" DisableUnderLine="true"
                              Adornment="Adornment.End" AdornmentText="шт" T="ushort?" HideSpinButtons="true"
                              Validation="@(new Func<ushort?, IEnumerable<string>>(NumberStrength))" Immediate="true"
-                             Style="height:15px; width:60px; font-weight:bold; margin:0px; position:center" />
-        </MudStack>
+                             Style="height:12px; width:60px; font-weight:bold; margin:0px; position:center" />
+        </MudStack>        
         <MudText>До 85%: <b style="color: @ColorEightyFive">@EightyFive</b> шт</MudText>
         <MudText>До 100%: <b style="color: @ColorOneHundred">@OneHundred</b> шт</MudText>
+        <MudText>Целевой <b>%</b> на текущую дату: <b>@TargetPercentage</b>%</MudText>
+        <MudText>Факт на текущую дату: <b style="color: @ColorFactOfToday">@FactOfToday</b>%</MudText>
+        <MudText>Разница на текущую дату: <b style="color: @ColorDeltaFact">@DeltaFact</b> шт</MudText>
+        
     </MudStack>
-    <MudStack Justify="Justify.Center" AlignItems="AlignItems.Center" Style="width:50px">
+    <MudStack Justify="Justify.Center" AlignItems="AlignItems.Center" Style="width:50px; margin-left:-150px; margin-bottom: 60px">
         <MudIconButton OnClick="@(() => StringFactRef.FocusAsync())" Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" Size="Size.Small" />
-    </MudStack>
+    </MudStack> 
 </MudStack>
 
 
