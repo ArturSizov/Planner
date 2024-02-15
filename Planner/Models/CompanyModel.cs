@@ -7,8 +7,8 @@ namespace Planner.Models
     /// </summary>
     public class CompanyModel : BindableObject
     {
-        private string _name = string.Empty;
         private int _id;
+        private string _name = string.Empty;
         private ObservableCollection<BranchModel> _branches = [];
 
         public int Id

@@ -9,6 +9,12 @@ namespace Planner.Components.Pages
 {
     partial class DetailsBranch
     {
+
+        /// <summary>
+        /// Parameter branch name
+        /// </summary>
+        [Parameter] public string Name { get; set; } = string.Empty;
+
         /// <summary>
         /// Branch model
         /// </summary>
@@ -18,11 +24,6 @@ namespace Planner.Components.Pages
         /// Tab panel
         /// </summary>
         public MudTabs? Tabs { get; set; }
-
-        /// <summary>
-        /// Parameter branch name
-        /// </summary>
-        [Parameter] public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// Dialog service
@@ -44,14 +45,19 @@ namespace Planner.Components.Pages
         /// </summary>
         protected override void OnInitialized()
         {
-            if (CompanyManager != null)
-                foreach (var company in CompanyManager.Items)
-                {
-                    var branch = company.Branches.Where(x => x.Name == Name).FirstOrDefault();
+            if (CompanyManager == null)
+                return;
 
-                    if (branch != null)
-                        Branch = branch;
-                }
+            if (!CompanyManager.Items.Any(x => x.Branches.Count != 0) || CompanyManager.Items.Count <= 0)
+                _navigation?.NavigateTo("/welcome");
+
+            foreach (var company in CompanyManager.Items)
+            {
+                var branch = company.Branches.Where(x => x.Name == Name).FirstOrDefault();
+
+                if (branch != null)
+                    Branch = branch;
+            }
         }
 
         /// <summary>
@@ -106,6 +112,9 @@ namespace Planner.Components.Pages
                 if (company != null)
                 {
                     Branch.Services.Add(service);
+
+                    Branch.WeekPlans.Add(new ServiceModel { Name = service.Name, Plan = 0, Fact = 0 });
+
                     await CompanyManager.UpdateAsync(company);
                 }               
             }
@@ -127,7 +136,7 @@ namespace Planner.Components.Pages
                 { x => x.CompanyName,  Branch.Name}
             };
 
-            var result = await _customDialogService.CreateItemDialog<CreateCompany>("Редактировать РУЭС", parameters);
+            var result = await _customDialogService.CreateItemDialog<CreateCompany>("Редактировать филиал", parameters);
 
             if (result.Item1 && Branch != null && CompanyManager != null)
             {
@@ -142,6 +151,7 @@ namespace Planner.Components.Pages
                         branch.Name = name;
                         branch.Services = Branch.Services;
                         branch.Default = Branch.Default;
+                        branch.WeekPlans = Branch.WeekPlans;
 
                         await CompanyManager.UpdateAsync(company);
                         _navigation?.NavigateTo($"details/{name}", true);
@@ -219,9 +229,12 @@ namespace Planner.Components.Pages
             {
                 var company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(b => b.Name == Branch.Name));
 
-                if (company != null)
+                var weekService = Branch.WeekPlans.FirstOrDefault(x => x.Name == service.Name);
+
+                if (company != null && weekService != null)
                 {
                     Branch.Services.Remove(service);
+                    Branch.WeekPlans.Remove(weekService);
                     await CompanyManager.UpdateAsync(company);
                 }
 

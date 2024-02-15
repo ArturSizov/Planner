@@ -31,8 +31,22 @@ namespace Planner.Managers
         /// <inheritdoc/>
         public Task<int> CreateAsync(CompanyModel item)
         {
-            Items.Add(item);
-            return _dataProvider.CreateAsync(item.ToDAO());
+            int id;
+
+            if (Items.Count <= 0)
+                id = 1;
+            else
+                id = Items.Max(x => x.Id) + 1;
+
+            var company = new CompanyModel
+            {
+                Id = id,
+                Name = item.Name,
+                Branches = item.Branches
+            };
+
+            Items.Add(company);
+            return _dataProvider.CreateAsync(company.ToDAO());
         }
 
         /// <inheritdoc/>
@@ -45,7 +59,7 @@ namespace Planner.Managers
         /// <inheritdoc/>
         public Task<int> DeleteAsync(CompanyModel item)
         {
-            var foundItem = Items.FirstOrDefault(x => x.Name == item.Name);
+            var foundItem = Items.FirstOrDefault(x => x.Id == item.Id);
 
             if (foundItem == null)
                 return Task.FromResult(0);

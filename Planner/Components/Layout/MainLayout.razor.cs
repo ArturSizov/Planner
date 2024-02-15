@@ -110,7 +110,7 @@ namespace Planner.Components.Layout
                         if (_snackbar == null)
                             return;
                         _snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomCenter;
-                        _snackbar.Add($"{Name} выбран по умолчанию", Severity.Info);
+                        _snackbar.Add($"<b style='color:#00FF00'>{Name}</b> выбран по умолчанию", Severity.Info);
                     }
                 }
             }
@@ -175,7 +175,6 @@ namespace Planner.Components.Layout
                         }
                     }
                 }
-
             }               
         }
     }

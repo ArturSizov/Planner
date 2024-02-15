@@ -1,10 +1,5 @@
 ﻿@page "/details/{name}"
 
-@if(string.IsNullOrEmpty(Branch.Name))
-{
-    <Welcome/>
-    return;
-}
   <MudSwipeArea OnSwipeEnd="HandleSwipeEnd">
     <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Transparent" @ref="Tabs">
         <MudTabPanel Text="План/Факт месяца" Icon="@Icons.Material.Filled.AddChart" ID="@("pn_one")">
@@ -41,8 +36,24 @@
     </MudTabPanel>
 
         <MudTabPanel Text="План недели" Icon="@Icons.Material.Filled.TrendingUp" ID="@("pn_two")">
-            <MudStack Class="full-screen">
-            
+            <MudStack Class="full-screen" Style="height: calc(100vh - (var(--mud-appbar-height) + 45px))">
+                @if (Branch.Services.Count > 0)
+                {
+                    @foreach (var weekPlan in Branch.WeekPlans)
+                    {
+                        <MudPaper Class="pa-1 m-1" Outlined="true">
+                            <WeekPlanComponent WeekPlan="weekPlan" BranchName="@Branch.Name"/>
+                        </MudPaper>
+                    }
+                }
+                else
+                {
+                    <MudStack Class="content-center">
+                        <MudIcon Color="Color.Error" Icon="@Icons.Material.Filled.QuestionMark" Style="height:150px; width:150px"></MudIcon>
+                        <MudText>Не данных</MudText>
+                        <MudButton OnClick="(async()=> await CreateServiceAsync())" Variant="Variant.Text">Добавьте услугу</MudButton>
+                    </MudStack>
+                }
         </MudStack>
     </MudTabPanel>
 </MudTabs>

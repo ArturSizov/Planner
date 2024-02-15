@@ -1,30 +1,43 @@
-﻿<MudNavMenu Margin="Margin.Dense" Color="Color.Warning">
+﻿
+<MudNavMenu Margin="Margin.Dense" Color="Color.Warning">
 
     <MudStack Row="true" Style="background-color:#512BD4; height:55px">
         <MudIcon Icon="@Icons.Material.Filled.Troubleshoot" Style="color:white" Size="Size.Large" Class="ml-2 mt-2" />
         <MudText Class="d-flex align-center" Typo="Typo.h5" Style="color:white; margin-left:-15px">Planner</MudText>
     </MudStack>
 
-    @if (CompanyManager != null)
+    @if (CompanyManager == null)
+        return;
 
-        @foreach (var company in CompanyManager.Items)
+    <MudStack Style=" height: calc(100vh - (var(--mud-appbar-height) + 80px))">
+        @if (CompanyManager.Items.Count != 0)
         {
-            <MudNavGroup Title="@company.Name" Expanded="false">
-                @foreach (var branch in company.Branches)
-                {
-                    <MudNavLink OnClick="(()=> OpenDetailsBranch(branch.Name))" Match="NavLinkMatch.All">@branch.Name</MudNavLink>
-                }
+            @foreach (var company in CompanyManager.Items)
+            {
+                <MudNavGroup Title="@company.Name" Expanded="false">
+                    @foreach (var branch in company.Branches)
+                    {
+                        <MudNavLink OnClick="(()=> OpenDetailsBranch(branch.Name))" >@branch.Name</MudNavLink>
+                    }
 
-                <MudToolBar Class="justify-end">
-                    <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="@(async()=> await CreateBranchAsync(company))" />
-                    <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" OnClick="@(async()=> await EditCompanyAsync(company))" />
-                    <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(async()=> await DeleteCompanyAsync(company))" />
-                </MudToolBar>
-            </MudNavGroup>
+                    <MudToolBar Class="justify-end">
+                        <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="@(async()=> await CreateBranchAsync(company))" />
+                        <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" OnClick="@(async()=> await EditCompanyAsync(company))" />
+                        <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(async()=> await DeleteCompanyAsync(company))" />
+                    </MudToolBar>
+                </MudNavGroup>
+            }
         }
-
-    <MudItem xs="12">
-        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Style="position: center; top: 20%; left: 25%; transform: translate(-20%,-25%); margin-top:25px"
-                   Color="Color.Success" Size="Size.Medium" OnClick="@(async()=> await CreateCompanyAsync())">Добавить филиал</MudButton>
-    </MudItem>
+        else
+        {
+            <MudStack Class="content-center">
+                <MudIcon Color="Color.Error" Icon="@Icons.Material.Filled.QuestionMark" Style="height:150px; width:150px"></MudIcon>
+                <MudText>Не данных</MudText>
+            </MudStack>
+        }
+    </MudStack>
+    <MudStack>
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Class="ml-1 mr-1"
+               Color="Color.Success" Size="Size.Medium" OnClick="@(async()=> await CreateCompanyAsync())">Добавить компанию</MudButton>
+    </MudStack>
 </MudNavMenu>

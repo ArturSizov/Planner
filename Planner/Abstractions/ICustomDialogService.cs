@@ -20,5 +20,11 @@ namespace Planner.Abstractions
         /// <param name="parameters">Dialog Parameters</param>
         /// <returns></returns>
         Task<(bool, object)> CreateItemDialog<T>(string title, DialogParameters parameters) where T : ComponentBase;
+
+        /// <summary>
+        /// Weekly Plan Update Dialog Box
+        /// </summary>
+        /// <returns></returns>
+        Task<bool> RefreshPlanOfWeekDialog();
     }
 }

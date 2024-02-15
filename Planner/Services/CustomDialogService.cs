@@ -46,14 +46,37 @@ namespace Planner.Services
         {
             var parameters = new DialogParameters<CustomMudDialog>
             {
-                { x => x.ContentText, $"Вы действительно хотите удалить {item}?" },
-                { x => x.ButtonText, "Да" },
+                { x => x.ContentText, (MarkupString)$"Вы действительно хотите удалить <b style='color:red'>{item}</b>?" },
+                { x => x.OkButtonText, "Да" },
                 { x => x.Color, MudBlazor.Color.Error }
             };
 
-            var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.False };
+            var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.False, ClassBackground = "blackout" };
 
             var dialog = _dialogService.Show<CustomMudDialog>("Удаление", parameters, options);
+
+            var result = await dialog.Result;
+
+            if (!result.Canceled)
+                return true;
+
+            return false;
+        }
+
+        /// <inheritdoc/>
+        public async Task<bool> RefreshPlanOfWeekDialog()
+        {
+            var parameters = new DialogParameters<CustomMudDialog>
+            {
+                { x => x.ContentText,  (MarkupString)"Сегодня не <b style='color:red'>понедельник</b>.<br>Вы действительно хотите рассчитать план на неделю?</br>" },
+                { x => x.OkButtonText, "Да" },
+                { x => x.NoButtonText, "Нет" },
+                { x => x.Color, MudBlazor.Color.Warning }
+            };
+
+            var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.False, ClassBackground = "blackout" };
+
+            var dialog = _dialogService.Show<CustomMudDialog>("Внимание", parameters, options);
 
             var result = await dialog.Result;
 

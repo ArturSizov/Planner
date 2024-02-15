@@ -1,0 +1,37 @@
+﻿<MudStack Spacing="1">
+    <MudText>Услуга: <b>@WeekPlan.Name</b></MudText>
+    <MudGrid Spacing="0">
+        <MudItem>
+            <MudText>План недели:</MudText>
+        </MudItem>
+        <MudItem>
+            <MudNumericField @bind-Value="@WeekPlan.Plan" @ref="StringFactRef" OnBlur="@(async()=> await UpdateCompanyAsync())" DisableUnderLine="true"
+                             Adornment="Adornment.End" AdornmentText="шт" T="ushort?" HideSpinButtons="true"
+                             Immediate="true"
+                             Style="height:13px; width:60px; font-weight:bold; margin:0px; margin-left:3px; position:center" />
+        </MudItem>
+        <MudItem Style="margin-top:-2px">
+            <MudIconButton OnClick="@(() => StringFactRef.FocusAsync())" Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" Size="Size.Small" />
+            <MudIconButton OnClick="@(() => ReloadPlanAsync())" Icon="@Icons.Material.Outlined.Refresh" Color="Color.Warning" Size="Size.Small" />
+        </MudItem>
+    </MudGrid>
+
+    <MudGrid Spacing="0">
+        <MudItem>
+            <MudText>Текущий факт недели:</MudText>
+        </MudItem>
+        <MudItem>
+            <MudNumericField @bind-Value="@WeekPlan.Fact" @ref="StringWeekPlanRef" OnBlur="@(async()=> await UpdateCompanyAsync())" DisableUnderLine="true"
+                             Adornment="Adornment.End" AdornmentText="шт" T="ushort?" HideSpinButtons="true"
+                             Immediate="true"
+                             Style="height:14px; width:60px; font-weight:bold; margin:0px; margin-left:3px" />
+        </MudItem>
+        <MudItem Style="margin-top:-2px">
+            <MudIconButton OnClick="@(() => StringWeekPlanRef.FocusAsync())" Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" Size="Size.Small" />
+        </MudItem>
+    </MudGrid>
+
+    <MudText>Выполнение: <b style="color: @ColorCompletionPercentage">@CompletionPercentage</b>%</MudText>
+</MudStack>
+
+

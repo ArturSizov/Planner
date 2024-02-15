@@ -16,12 +16,17 @@ namespace Planner.Components.Dialogs
         /// <summary>
         /// Message content
         /// </summary>
-        [Parameter] public string ContentText { get; set; } = string.Empty;
+        [Parameter] public MarkupString ContentText { get; set; }
 
         /// <summary>
-        /// Button content
+        /// Ok button content
         /// </summary>
-        [Parameter] public string ButtonText { get; set; } = string.Empty;
+        [Parameter] public string OkButtonText { get; set; } = string.Empty;
+
+        /// <summary>
+        /// No button content
+        /// </summary>
+        [Parameter] public string NoButtonText { get; set; } = "Отмена";
 
         /// <summary>
         /// Background color

@@ -12,7 +12,9 @@ namespace Planner.Models
         private bool @default;
 
         private ObservableCollection<ServiceModel> _services = [];
-        
+
+        private ObservableCollection<ServiceModel> _weekPlans = [];
+
         public string Name
         {
             get => _name;
@@ -39,6 +41,16 @@ namespace Planner.Models
             set
             {
                 _services = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<ServiceModel> WeekPlans
+        {
+            get => _weekPlans;
+            set
+            {
+                _weekPlans = value;
                 OnPropertyChanged();
             }
         }

@@ -8,7 +8,7 @@ namespace Planner.Components.Pages
     public partial class ServiceComponent
     {
         /// <summary>
-        /// Service name
+        /// Service parameter
         /// </summary>
         [Parameter] public ServiceModel Service { get; set; } = new();
 
@@ -30,7 +30,7 @@ namespace Planner.Components.Pages
         /// <summary>
         /// Fact as of today
         /// </summary>
-        public int FactOfToday { get; set; }
+        public int CurrentDatePercentage { get; set; }
 
         /// <summary>
         /// Target percentage for the current date
@@ -41,6 +41,11 @@ namespace Planner.Components.Pages
         /// Fact difference for current date
         /// </summary>
         public int? DeltaFact { get; set; }
+
+        /// <summary>
+        /// Current progress as a percentage
+        /// </summary>
+        public int CurrentExecutionPercentage { get; set; }
 
         /// <summary>
         /// Color eighty five
@@ -55,12 +60,17 @@ namespace Planner.Components.Pages
         /// <summary>
         /// Color fact of today
         /// </summary>
-        public string? ColorFactOfToday { get; set; }
+        public string? ColorCurrentDatePercentage { get; set; }
 
         /// <summary>
         /// Color delta fact
         /// </summary>
         public string? ColorDeltaFact { get; set; }
+
+        /// <summary>
+        /// Color current execution percentage
+        /// </summary>
+        public string? ColorCurrentExecutionPercentage { get; set; }
 
         /// <summary>
         /// Row fact element reference
@@ -107,6 +117,9 @@ namespace Planner.Components.Pages
                 yield return "Не может быть пустым";
         }
 
+        /// <summary>
+        /// On parameters set
+        /// </summary>
         protected override void OnParametersSet()
         {
             UpdateDate();            
@@ -123,7 +136,10 @@ namespace Planner.Components.Pages
 
                 OneHundred = Service.Plan - Service.Fact;
 
-                FactOfToday = Convert.ToInt32(Convert.ToDouble(Service.Fact) / Convert.ToDouble(Service.Plan) * 100);
+                if (Service.Plan != 0)
+                    CurrentDatePercentage = Convert.ToInt32(Convert.ToDouble(Service.Fact) / Convert.ToDouble(Service.Plan) * 100);
+                else
+                    CurrentDatePercentage = 0;
 
                 var days = DateTime.Today.Day;
 
@@ -141,6 +157,8 @@ namespace Planner.Components.Pages
 
                 DeltaFact = Service.Fact - (Service.Plan * TargetPercentage / 100);
 
+                CurrentExecutionPercentage = Convert.ToInt32(Convert.ToDouble(CurrentDatePercentage) / Convert.ToDouble(TargetPercentage) * 100);
+
                 if (EightyFive < 0)
                     EightyFive = 0;
 
@@ -156,29 +174,39 @@ namespace Planner.Components.Pages
         /// </summary>
         private void SetColor()
         {
-            var minPlanOfDaily85 = Convert.ToDouble(Service.Plan * 85 / 100) / Convert.ToDouble(DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month));
-
-            var minPlanOfDaily100 = Convert.ToDouble(Service.Plan) / Convert.ToDouble(DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month));
-
-            if (Service.Fact <= DateTime.Today.Day * minPlanOfDaily85)
-                ColorEightyFive = "red";
+            if (CurrentDatePercentage >= 85)
+                ColorEightyFive = "#32CD32";
+            else if(CurrentDatePercentage >= 65)
+                ColorEightyFive = "#FFD700";
             else
-                 ColorEightyFive = "#32CD32";
+                 ColorEightyFive = "red";
 
-            if (Service.Fact <= DateTime.Today.Day * minPlanOfDaily100)
-                ColorOneHundred = "red";
-            else
+            if (CurrentDatePercentage >= 100)
                 ColorOneHundred = "#32CD32";
-
-            if (TargetPercentage > FactOfToday)
-                ColorFactOfToday = "red";
+            else if (CurrentDatePercentage >= 85)
+                ColorOneHundred = "#FFD700";
             else
-                ColorFactOfToday = "#32CD32";
+                ColorOneHundred = "red";
+
+
+            if (CurrentDatePercentage >= TargetPercentage)
+                ColorCurrentDatePercentage = "#32CD32";
+            else if (CurrentDatePercentage >= TargetPercentage * 85 / 100)
+                ColorCurrentDatePercentage = "#FFD700";
+            else
+                ColorCurrentDatePercentage = "red";
 
             if (DeltaFact < 0)
                 ColorDeltaFact = "red";
             else
                 ColorDeltaFact = "#32CD32";
+
+            if (CurrentExecutionPercentage >= 100)
+                ColorCurrentExecutionPercentage = "#32CD32";
+            else if (CurrentExecutionPercentage >= 85)
+                ColorCurrentExecutionPercentage = "#FFD700";
+            else
+                ColorCurrentExecutionPercentage = "red";
         }
     }
 }

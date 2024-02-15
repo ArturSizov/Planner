@@ -32,7 +32,7 @@ namespace Planner.Components.Layout
             if (_customDialogService == null)
                 return;
 
-            var result = await _customDialogService.CreateItemDialog<CreateCompany>("Добавить ЗУЭС", []);
+            var result = await _customDialogService.CreateItemDialog<CreateCompany>("Добавить компанию", []);
 
             var companyName = result.Item2 as string;
 
@@ -42,10 +42,20 @@ namespace Planner.Components.Layout
                 {
                     Name = companyName
                 });
-                _navigation?.NavigateTo("/", true);
 
                 StateHasChanged();
-            }               
+            }
+
+            if (CompanyManager == null)
+                return;
+
+            if (CompanyManager.Items.Any(x => x.Branches.Count <= 0))
+            {
+                var company = CompanyManager?.Items.FirstOrDefault(x => x.Name == companyName);
+
+                 if(company != null)
+                    await CreateBranchAsync(company);
+            }
         }
 
         /// <summary>
@@ -63,7 +73,7 @@ namespace Planner.Components.Layout
                 { x => x.CompanyName,  company.Name}
             };
 
-            var result = await _customDialogService.CreateItemDialog<CreateCompany>("Редактировать ЗУЭС", parameters);
+            var result = await _customDialogService.CreateItemDialog<CreateCompany>("Редактировать компанию", parameters);
 
             if (result.Item1 && company != null && CompanyManager != null)
             {
@@ -95,7 +105,7 @@ namespace Planner.Components.Layout
             if (_customDialogService == null)
                 return;
 
-            var result = await _customDialogService.CreateItemDialog<CreateCompany>("Добавить РУЭС", []);
+            var result = await _customDialogService.CreateItemDialog<CreateCompany>("Добавить филиал", []);
 
             if (result.Item1 && result.Item2 is string name)
             {
@@ -113,7 +123,10 @@ namespace Planner.Components.Layout
                 _navigation?.NavigateTo($"details/{name}", true);
 
                 StateHasChanged();
-            }           
+            }
+            else
+                if (CompanyManager != null)
+                await CompanyManager.UpdateAsync(company);
         }
 
         /// <summary>
@@ -131,7 +144,15 @@ namespace Planner.Components.Layout
             {
                 await CompanyManager.DeleteAsync(company);
 
-                _navigation?.NavigateTo("/", true);
+                if(!CompanyManager.Items.Any(x => x.Branches.Count != 0) || CompanyManager.Items.Count <= 0)
+                    _navigation?.NavigateTo("/welcome", true);
+                else
+                {
+                    var branch = CompanyManager.Items.SelectMany(x => x.Branches).FirstOrDefault(b => b.Name != string.Empty);
+
+                    if(branch != null)
+                        _navigation?.NavigateTo($"/details/{branch.Name}", true);
+                }
             }
 
             StateHasChanged();
