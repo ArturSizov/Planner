@@ -8,7 +8,7 @@
                 {
                     @foreach (var service in Branch.Services)
                     {
-                        <MudPaper Class="pa-1 m-1" Outlined="true">
+                        <MudPaper Class="pa-1 m-1" Outlined="true" Style="background-color:#F0F8FF">
                             <ServiceComponent Service="@service" />
                             <MudToolBar Class="justify-end">
                                 <MudIconButton Icon="@Icons.Material.Outlined.Edit" OnClick="(async()=> await EditServiceAsync(service))" Color="Color.Success" Variant="Variant.Filled" Size="Size.Small" Class="m-1" />
@@ -21,7 +21,7 @@
                 {
                     <MudStack Class="content-center">
                         <MudIcon Color="Color.Error" Icon="@Icons.Material.Filled.QuestionMark" Style="height:150px; width:150px"></MudIcon>
-                        <MudText>Не данных</MudText>
+                        <MudText Style="color:black">Не данных</MudText>
                         <MudButton OnClick="(async()=> await CreateServiceAsync())" Variant="Variant.Text">Добавьте услугу</MudButton>
                     </MudStack>
                 }
@@ -36,12 +36,12 @@
     </MudTabPanel>
 
         <MudTabPanel Text="План недели" Icon="@Icons.Material.Filled.TrendingUp" ID="@("pn_two")">
-            <MudStack Class="full-screen" Style="height: calc(100vh - (var(--mud-appbar-height) + 45px))">
+            <MudStack Class="full-screen" Style="height: calc(100vh - (var(--mud-appbar-height) + 45px)); background-color:#F0F8FF">
                 @if (Branch.Services.Count > 0)
                 {
                     @foreach (var weekPlan in Branch.WeekPlans)
                     {
-                        <MudPaper Class="pa-1 m-1" Outlined="true">
+                        <MudPaper Class="pa-2 m-1" Outlined="true">
                             <WeekPlanComponent WeekPlan="weekPlan" BranchName="@Branch.Name"/>
                         </MudPaper>
                     }

@@ -54,7 +54,6 @@ namespace Planner.Components.Pages
                 });
 
                 StateHasChanged();
-
             }
             else
                 return;
@@ -65,7 +64,7 @@ namespace Planner.Components.Pages
 
             if (_companyManager.Items.Any(x => x.Branches.Count <= 0))
             {
-               var company = _companyManager?.Items.FirstOrDefault(x => x.Name == _companyName);
+                var company = _companyManager?.Items.FirstOrDefault(x => x.Name == _companyName);
 
                 var resultBranch = await _customDialogService.CreateItemDialog<CreateCompany>("Добавить филиал", []);
 
@@ -86,6 +85,8 @@ namespace Planner.Components.Pages
 
                     StateHasChanged();
                 }
+                else 
+                    _navigation?.NavigateTo("/", true);
             }
         }
     }

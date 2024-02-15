@@ -1,34 +1,32 @@
-﻿<MudStack Row="true">
-    <MudStack Spacing="1">
-        <MudPaper Class="p-1" Outlined="true">
-            <MudText>Услуга: <b>@Service.Name</b></MudText>
-            <MudText>План: <b>@Service.Plan</b> шт</MudText>
-            <MudGrid Spacing="0">
-                <MudItem>
-                    <MudText> Факт:</MudText>
-                </MudItem>
-                <MudItem>
-                    <MudNumericField @bind-Value="@Service.Fact" @ref="StringFactRef" OnBlur="@(async()=> await UpdateCompanyAsync(Service.Name))" DisableUnderLine="true"
-                                     Adornment="Adornment.End" AdornmentText="шт" T="ushort?" HideSpinButtons="true"
-                                     Validation="@(new Func<ushort?, IEnumerable<string>>(NumberStrength))" Immediate="true"
-                                     Style="height:14px; width:60px; font-weight:bold; margin:0px; margin-left:3px" />
-                </MudItem>
-                <MudItem Style="margin-top:-2px">
-                    <MudIconButton OnClick="@(() => StringFactRef.FocusAsync())" Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" Size="Size.Small" />
-                </MudItem>
-            </MudGrid>
-            <MudText>Факт на текущую дату: <b style="color: @ColorCurrentExecutionPercentage">@CurrentExecutionPercentage</b> %</MudText>
-            <MudText>Разница на текущую дату: <b style="color: @ColorDeltaFact">@DeltaFact</b> шт</MudText>
-        </MudPaper>
-        <MudPaper Class="p-1" Outlined="true">
-            <MudText>До 85%: <b style="color: @ColorEightyFive">@EightyFive</b> шт</MudText>
-            <MudText>До 100%: <b style="color: @ColorOneHundred">@OneHundred</b> шт</MudText>
-        </MudPaper>
-        <MudPaper Class="p-1" Outlined="true">
-            <MudText>Целевой <b>%</b> на текущую дату: <b>@TargetPercentage</b>%</MudText>
-            <MudText>Факт целевого <b>%</b> на текущую дату: <b style="color: @ColorCurrentDatePercentage">@CurrentDatePercentage</b>%</MudText>
-        </MudPaper>
-    </MudStack>
+﻿<MudStack Class="p-1">
+    <MudPaper Class="p-1" Outlined="true">
+        <MudText>Услуга: <b>@Service.Name</b></MudText>
+        <MudText>План: <b>@Service.Plan</b> шт</MudText>
+        <MudGrid Spacing="0">
+            <MudItem>
+                <MudText> Факт:</MudText>
+            </MudItem>
+            <MudItem>
+                <MudNumericField @bind-Value="@Service.Fact" @ref="StringFactRef" OnBlur="@(async()=> await UpdateCompanyAsync(Service.Name))" DisableUnderLine="true"
+                                 Adornment="Adornment.End" AdornmentText="шт" T="ushort?" HideSpinButtons="true"
+                                 Validation="@(new Func<ushort?, IEnumerable<string>>(NumberStrength))" Immediate="true"
+                                 Style="height:14px; width:60px; font-weight:bold; margin:0px; margin-left:3px" />
+            </MudItem>
+            <MudItem Style="margin-top:-2px">
+                <MudIconButton OnClick="@(() => StringFactRef.FocusAsync())" Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" Size="Size.Small" />
+            </MudItem>
+        </MudGrid>
+        <MudText>Факт на текущую дату: <b style="color: @ColorCurrentExecutionPercentage">@CurrentExecutionPercentage</b> %</MudText>
+        <MudText>Разница на текущую дату: <b style="color: @ColorDeltaFact">@DeltaFact</b> шт</MudText>
+    </MudPaper>
+    <MudPaper Class="p-1" Outlined="true">
+        <MudText>До 85%: <b style="color: @ColorEightyFive">@EightyFive</b> шт</MudText>
+        <MudText>До 100%: <b style="color: @ColorOneHundred">@OneHundred</b> шт</MudText>
+    </MudPaper>
+    <MudPaper Class="p-1" Outlined="true">
+        <MudText>Целевой <b>%</b> на текущую дату: <b>@TargetPercentage</b>%</MudText>
+        <MudText>Факт целевого <b>%</b> на текущую дату: <b style="color: @ColorCurrentDatePercentage">@CurrentDatePercentage</b>%</MudText>
+    </MudPaper>
 </MudStack>
 
 

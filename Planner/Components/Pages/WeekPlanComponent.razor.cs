@@ -102,7 +102,6 @@ namespace Planner.Components.Pages
 
             var service = branch?.Services.FirstOrDefault(x => x.Name == WeekPlan.Name);
 
-
             if (branch == null || service == null || _snackbar == null)
                 return;
 
@@ -118,6 +117,8 @@ namespace Planner.Components.Pages
                 WeekPlan.Plan = 0;
             else
                 WeekPlan.Plan = (ushort?)(Math.Round(delta / daysLeft * 7, 0, MidpointRounding.AwayFromZero));
+
+            WeekPlan.Fact = 0;
 
             await UpdateCompanyAsync();
 

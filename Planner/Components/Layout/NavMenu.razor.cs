@@ -23,7 +23,7 @@ namespace Planner.Components.Layout
         /// </summary>
         [Inject] private NavigationManager? _navigation { get; set; }
 
- 
+
         /// <summary>
         /// Create company open dialog window
         /// </summary>
@@ -44,7 +44,11 @@ namespace Planner.Components.Layout
                 });
 
                 StateHasChanged();
+
             }
+            else
+                return;
+
 
             if (CompanyManager == null)
                 return;
@@ -53,8 +57,25 @@ namespace Planner.Components.Layout
             {
                 var company = CompanyManager?.Items.FirstOrDefault(x => x.Name == companyName);
 
-                 if(company != null)
-                    await CreateBranchAsync(company);
+                var resultBranch = await _customDialogService.CreateItemDialog<CreateCompany>("Добавить филиал", []);
+
+                if (resultBranch.Item1 && resultBranch.Item2 is string name && company != null)
+                {
+                    CompanyManager?.Items?.FirstOrDefault(x => x.Name == company.Name)?.
+                        Branches.Add(
+                        new BranchModel
+                        {
+                            Name = name,
+                            Default = !CompanyManager.Items.Any(x => x.Branches.Any(b => b.Default == true))
+                        });
+
+                    if (CompanyManager != null)
+                        await CompanyManager.UpdateAsync(company);
+
+                    _navigation?.NavigateTo($"details/{name}", true);
+
+                    StateHasChanged();
+                }
             }
         }
 
@@ -138,6 +159,7 @@ namespace Planner.Components.Layout
         {
             if (_customDialogService == null)
                 return;
+
             var result = await _customDialogService.DeleteItemDialog(company.Name);
 
             if (result && company != null && CompanyManager != null)
@@ -150,7 +172,7 @@ namespace Planner.Components.Layout
                 {
                     var branch = CompanyManager.Items.SelectMany(x => x.Branches).FirstOrDefault(b => b.Name != string.Empty);
 
-                    if(branch != null)
+                    if (branch != null)
                         _navigation?.NavigateTo($"/details/{branch.Name}", true);
                 }
             }
