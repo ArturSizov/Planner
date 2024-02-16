@@ -1,0 +1,12 @@
+﻿<MudDialog DisableSidePadding="true" Class="m-2">
+    <DialogContent>
+        <MudContainer Style="height:300px">
+            <MudTextField T="string" Variant="Variant.Outlined" Text="@Text" Lines="14"/>
+        </MudContainer>
+    </DialogContent>
+    <DialogActions>
+         <MudIconButton Icon="@Icons.Material.Outlined.ClearAll" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Small" Class="m-1" />
+        <MudButton Variant="Variant.Filled" Color="Color.Inherit" OnClick="Cancel">Отмена</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="Submit">Сохранить</MudButton>
+    </DialogActions>
+</MudDialog>

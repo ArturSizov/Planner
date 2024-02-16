@@ -13,7 +13,7 @@ namespace Planner.Models
 
         private ObservableCollection<ServiceModel> _services = [];
 
-        private ObservableCollection<ServiceModel> _weekPlans = [];
+        private ObservableCollection<WeekServiceModel> _weekPlans = [];
 
         public string Name
         {
@@ -45,7 +45,7 @@ namespace Planner.Models
             }
         }
 
-        public ObservableCollection<ServiceModel> WeekPlans
+        public ObservableCollection<WeekServiceModel> WeekPlans
         {
             get => _weekPlans;
             set

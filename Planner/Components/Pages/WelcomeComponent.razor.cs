@@ -5,7 +5,7 @@ using Planner.Models;
 
 namespace Planner.Components.Pages
 {
-    public partial class Welcome
+    public partial class WelcomeComponent
     {
         /// <summary>
         /// Company data manager

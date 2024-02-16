@@ -113,7 +113,7 @@ namespace Planner.Components.Pages
                 {
                     Branch.Services.Add(service);
 
-                    Branch.WeekPlans.Add(new ServiceModel { Name = service.Name, Plan = 0, Fact = 0 });
+                    Branch.WeekPlans.Add(new WeekServiceModel { Service = service });
 
                     await CompanyManager.UpdateAsync(company);
                 }               
@@ -229,7 +229,7 @@ namespace Planner.Components.Pages
             {
                 var company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(b => b.Name == Branch.Name));
 
-                var weekService = Branch.WeekPlans.FirstOrDefault(x => x.Name == service.Name);
+                var weekService = Branch.WeekPlans.FirstOrDefault(x => x.Service.Name == service.Name);
 
                 if (company != null && weekService != null)
                 {

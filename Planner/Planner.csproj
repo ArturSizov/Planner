@@ -75,6 +75,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Content Remove="Components\Dialogs\Notes.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
       <None Remove="Components\Layout\NavMenu.css" />
       <None Remove="Components\Layout\NavMenu.razor.css" />
       <None Remove="Platforms\Android\Resources\values\styles.xml" />
@@ -96,5 +100,17 @@
     </ItemGroup>
 
     <ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionPlannerHideInfoBar="True" /></VisualStudio></ProjectExtensions>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Components\Dialogs\Notes.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Components\Dialogs\Notes.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="Components\Dialogs\Notes.razor" />
+    </ItemGroup>
 
 </Project>

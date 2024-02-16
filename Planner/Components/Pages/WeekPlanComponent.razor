@@ -1,11 +1,11 @@
-﻿<MudStack Spacing="0">
-    <MudText>Услуга: <b>@WeekPlan.Name</b></MudText>
+﻿<MudStack Spacing="0" onclick="@(async() => await OpenNotesAsync())">
+    <MudText>Услуга: <b>@WeekPlan.Service.Name</b></MudText>
     <MudGrid Spacing="0">
         <MudItem>
             <MudText>План недели:</MudText>
         </MudItem>
         <MudItem>
-            <MudNumericField @bind-Value="@WeekPlan.Plan" @ref="StringFactRef" OnBlur="@(async()=> await UpdateCompanyAsync())" DisableUnderLine="true"
+            <MudNumericField @bind-Value="@WeekPlan.Service.Plan" @ref="StringFactRef" OnBlur="@(async()=> await UpdateCompanyAsync())" DisableUnderLine="true"
                              Adornment="Adornment.End" AdornmentText="шт" T="ushort?" HideSpinButtons="true"
                              Immediate="true"
                              Style="height:13px; width:60px; font-weight:bold; margin:0px; margin-left:3px; position:center" />
@@ -21,7 +21,7 @@
             <MudText>Текущий факт недели:</MudText>
         </MudItem>
         <MudItem>
-            <MudNumericField @bind-Value="@WeekPlan.Fact" @ref="StringWeekPlanRef" OnBlur="@(async()=> await UpdateCompanyAsync())" DisableUnderLine="true"
+            <MudNumericField @bind-Value="@WeekPlan.Service.Fact" @ref="StringWeekPlanRef" OnBlur="@(async()=> await UpdateCompanyAsync())" DisableUnderLine="true"
                              Adornment="Adornment.End" AdornmentText="шт" T="ushort?" HideSpinButtons="true"
                              Immediate="true"
                              Style="height:14px; width:60px; font-weight:bold; margin:0px; margin-left:3px" />

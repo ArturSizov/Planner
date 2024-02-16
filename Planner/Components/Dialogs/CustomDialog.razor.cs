@@ -6,7 +6,7 @@ namespace Planner.Components.Dialogs
     /// <summary>
     /// Dialog window
     /// </summary>
-    partial class CustomMudDialog
+    public partial class CustomDialog
     {
         /// <summary>
         /// Mud Dialog Instance

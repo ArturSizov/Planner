@@ -20,12 +20,10 @@ namespace Planner.Components.Dialogs
         /// </summary>
         public bool Success { get; set; } = true;
 
-
         /// <summary>
         /// Ok method
         /// </summary>
         public void Submit() => MudDialog?.Close(CompanyName);
-
 
         /// <summary>
         /// Close dialog window
@@ -52,6 +50,5 @@ namespace Planner.Components.Dialogs
             else
                 Success = false;
         }
-
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Planner.Abstractions;
+using Planner.Components.Dialogs;
 using Planner.Models;
 
 namespace Planner.Components.Pages
@@ -10,7 +11,7 @@ namespace Planner.Components.Pages
         /// <summary>
         /// Week plan parameter
         /// </summary>
-        [Parameter] public ServiceModel WeekPlan { get; set; } = new();
+        [Parameter] public WeekServiceModel WeekPlan { get; set; } = new();
 
         /// <summary>
         /// Branch name
@@ -37,8 +38,10 @@ namespace Planner.Components.Pages
         /// </summary>
         public int? CompletionPercentage { get; set; }
 
+        /// <summary>
+        /// Color completion percentage
+        /// </summary>
         public string? ColorCompletionPercentage { get; set; }
-
 
         /// <summary>
         /// Row week plan element reference
@@ -70,7 +73,6 @@ namespace Planner.Components.Pages
             await StringWeekPlanRef.FocusAsync();
         }
 
-
         /// <summary>
         /// Update company
         /// </summary>
@@ -100,7 +102,7 @@ namespace Planner.Components.Pages
 
             var branch = _companyManager.Items.SelectMany(x => x.Branches).FirstOrDefault(b => b.Name == BranchName);
 
-            var service = branch?.Services.FirstOrDefault(x => x.Name == WeekPlan.Name);
+            var service = branch?.Services.FirstOrDefault(x => x.Name == WeekPlan.Service.Name);
 
             if (branch == null || service == null || _snackbar == null)
                 return;
@@ -114,11 +116,11 @@ namespace Planner.Components.Pages
             var delta = Convert.ToDouble(service.Plan) - Convert.ToDouble(service.Fact);
 
             if (service.Fact >= service.Plan)
-                WeekPlan.Plan = 0;
+                WeekPlan.Service.Plan = 0;
             else
-                WeekPlan.Plan = (ushort?)(Math.Round(delta / daysLeft * 7, 0, MidpointRounding.AwayFromZero));
+                WeekPlan.Service.Plan = (ushort?)(Math.Round(delta / daysLeft * 7, 0, MidpointRounding.AwayFromZero));
 
-            WeekPlan.Fact = 0;
+            WeekPlan.Service.Fact = 0;
 
             await UpdateCompanyAsync();
 
@@ -131,12 +133,20 @@ namespace Planner.Components.Pages
         /// </summary>
         private void UpdateDate()
         {
-            if (WeekPlan.Plan != 0)
-                CompletionPercentage = Convert.ToInt32(Convert.ToDouble(WeekPlan.Fact) / Convert.ToDouble(WeekPlan.Plan) * 100);
+            if (WeekPlan.Service.Plan != 0)
+                CompletionPercentage = Convert.ToInt32(Convert.ToDouble(WeekPlan.Service.Fact) / Convert.ToDouble(WeekPlan.Service.Plan) * 100);
             else
                 CompletionPercentage = 0;
 
             SetColor();
+        }
+
+
+        public async Task OpenNotesAsync()
+        {
+            if (_customDialogService == null)
+                return;
+            var result = await _customDialogService.CreateItemDialog<Notes>($"Заметки/{WeekPlan.Service.Name}", []);
         }
 
         /// <summary>

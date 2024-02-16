@@ -44,7 +44,7 @@ namespace Planner.Services
         /// <inheritdoc/>
         public async Task<bool> DeleteItemDialog(string item)
         {
-            var parameters = new DialogParameters<CustomMudDialog>
+            var parameters = new DialogParameters<CustomDialog>
             {
                 { x => x.ContentText, (MarkupString)$"Вы действительно хотите удалить <b style='color:red'>{item}</b>?" },
                 { x => x.OkButtonText, "Да" },
@@ -53,7 +53,7 @@ namespace Planner.Services
 
             var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.False, ClassBackground = "blackout" };
 
-            var dialog = _dialogService.Show<CustomMudDialog>("Удаление", parameters, options);
+            var dialog = _dialogService.Show<CustomDialog>("Удаление", parameters, options);
 
             var result = await dialog.Result;
 
@@ -66,7 +66,7 @@ namespace Planner.Services
         /// <inheritdoc/>
         public async Task<bool> RefreshPlanOfWeekDialog()
         {
-            var parameters = new DialogParameters<CustomMudDialog>
+            var parameters = new DialogParameters<CustomDialog>
             {
                 { x => x.ContentText,  (MarkupString)"Сегодня не <b style='color:red'>понедельник</b>.<br>Вы действительно хотите рассчитать план на неделю?</br>" },
                 { x => x.OkButtonText, "Да" },
@@ -76,7 +76,7 @@ namespace Planner.Services
 
             var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.False, ClassBackground = "blackout" };
 
-            var dialog = _dialogService.Show<CustomMudDialog>("Внимание", parameters, options);
+            var dialog = _dialogService.Show<CustomDialog>("Внимание", parameters, options);
 
             var result = await dialog.Result;
 
