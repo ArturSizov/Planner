@@ -44,7 +44,6 @@ namespace Planner.Components.Layout
                 });
 
                 StateHasChanged();
-
             }
             else
                 return;

@@ -3,6 +3,7 @@ using MudBlazor;
 using Planner.Abstractions;
 using Planner.Components.Dialogs;
 using Planner.Models;
+using static MudBlazor.Icons.Custom;
 
 namespace Planner.Components.Pages
 {
@@ -141,12 +142,28 @@ namespace Planner.Components.Pages
             SetColor();
         }
 
-
+        /// <summary>
+        /// Opens the notes window
+        /// </summary>
+        /// <returns></returns>
         public async Task OpenNotesAsync()
         {
             if (_customDialogService == null)
                 return;
-            var result = await _customDialogService.CreateItemDialog<Notes>($"Заметки/{WeekPlan.Service.Name}", []);
+
+            var parameters = new DialogParameters<Notes>
+            {
+                { x => x.Text,  WeekPlan.Notes}
+            };
+
+            var result = await _customDialogService.CreateItemDialog<Notes>($"Заметки/{WeekPlan.Service.Name}", parameters);
+
+            if (result.Item1)
+            {
+                WeekPlan.Notes = result.Item2 as string;
+
+                await UpdateCompanyAsync();
+            }
         }
 
         /// <summary>
