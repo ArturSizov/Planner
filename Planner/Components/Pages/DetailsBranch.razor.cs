@@ -113,7 +113,7 @@ namespace Planner.Components.Pages
                 {
                     Branch.Services.Add(service);
 
-                    Branch.WeekPlans.Add(new WeekServiceModel { Service = service });
+                    Branch.WeekPlans.Add(new WeekServiceModel { Service = new ServiceModel { Name = service.Name, Plan = 0, Fact = 0} });
 
                     await CompanyManager.UpdateAsync(company);
                 }               
