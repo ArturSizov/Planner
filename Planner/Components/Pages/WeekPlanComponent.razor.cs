@@ -3,7 +3,6 @@ using MudBlazor;
 using Planner.Abstractions;
 using Planner.Components.Dialogs;
 using Planner.Models;
-using static MudBlazor.Icons.Custom;
 
 namespace Planner.Components.Pages
 {
@@ -53,6 +52,8 @@ namespace Planner.Components.Pages
         /// Row fact element reference
         /// </summary>
         public MudNumericField<ushort?> StringFactRef = new();
+
+        public bool Focused { get; set; }
 
         /// <summary>
         /// Focus on fact row

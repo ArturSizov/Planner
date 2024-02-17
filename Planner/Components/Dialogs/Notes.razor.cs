@@ -32,10 +32,5 @@ namespace Planner.Components.Dialogs
         {
             Text = null;
         }
-
-        protected override void OnInitialized()
-        {
-            
-        }
     }
 }
