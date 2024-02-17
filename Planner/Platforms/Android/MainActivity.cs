@@ -16,6 +16,8 @@ namespace Planner
             Window?.SetStatusBarColor(Android.Graphics.Color.ParseColor("#512BD4"));
 
             base.OnCreate(savedInstanceState);
+
+            DeviceDisplay.KeepScreenOn = true;
         }
     }
 }
