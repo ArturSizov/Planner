@@ -28,7 +28,7 @@
                     <MudStack Class="content-center">
                         <MudIcon Color="Color.Error" Icon="@Icons.Material.Filled.QuestionMark" Style="height:150px; width:150px"></MudIcon>
                         <MudText Style="color:black">Не данных</MudText>
-                        <MudButton OnClick="(async()=> await CreateServiceAsync())" Variant="Variant.Text">Добавьте услугу</MudButton>
+                        <MudButton OnClick="(async()=> await CreateServiceAsync())" Variant="Variant.Text">Добавить услугу</MudButton>
                     </MudStack>
                 }
             </MudStack>
@@ -42,12 +42,12 @@
         </MudTabPanel>
 
         <MudTabPanel Text="План недели" Icon="@Icons.Material.Filled.TrendingUp" ID="@("pn_two")">
-            <MudStack Class="full-screen" Style="height: calc(100vh - (var(--mud-appbar-height) + 45px)); background-color:#F0F8FF">
+            <MudStack Class="full-screen" Style="height: calc(100vh - (var(--mud-appbar-height) + 55px))">
                 @if (Branch.Services.Count > 0)
                 {
                     @foreach (var weekPlan in Branch.WeekPlans)
                     {
-                        <MudPaper Class="pa-2 m-1 ml-2" Outlined="true">
+                        <MudPaper Class="pa-2 m-1 ml-2" Outlined="true" Style="background-color:#F0F8FF">
                             <WeekPlanComponent WeekPlan="weekPlan" BranchName="@Branch.Name" />
                         </MudPaper>
                     }
@@ -57,7 +57,7 @@
                     <MudStack Class="content-center">
                         <MudIcon Color="Color.Error" Icon="@Icons.Material.Filled.QuestionMark" Style="height:150px; width:150px"></MudIcon>
                         <MudText>Не данных</MudText>
-                        <MudButton OnClick="(async()=> await CreateServiceAsync())" Variant="Variant.Text">Добавьте услугу</MudButton>
+                        <MudButton OnClick="(async()=> await CreateServiceAsync())" Variant="Variant.Text">Добавить услугу</MudButton>
                     </MudStack>
                 }
             </MudStack>
