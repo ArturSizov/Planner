@@ -1,5 +1,11 @@
 ﻿@page "/details/{name}"
 
+@if (string.IsNullOrEmpty(Branch.Name) || CompanyManager?.Items.Count <= 0)
+{
+    <WelcomeComponent/>
+    return;
+}
+
 <MudSwipeArea OnSwipeEnd="HandleSwipeEnd">
     <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Transparent" @ref="Tabs">
         <MudTabPanel Text="План/Факт месяца" Icon="@Icons.Material.Filled.AddChart" ID="@("pn_one")">

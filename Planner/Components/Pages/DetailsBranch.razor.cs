@@ -48,9 +48,6 @@ namespace Planner.Components.Pages
             if (CompanyManager == null)
                 return;
 
-            if (!CompanyManager.Items.Any(x => x.Branches.Count != 0) || CompanyManager.Items.Count <= 0)
-                _navigation?.NavigateTo("/welcome");
-
             foreach (var company in CompanyManager.Items)
             {
                 var branch = company.Branches.Where(x => x.Name == Name).FirstOrDefault();
