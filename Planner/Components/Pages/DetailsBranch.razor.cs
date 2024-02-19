@@ -2,6 +2,7 @@
 using MudBlazor;
 using Planner.Abstractions;
 using Planner.Components.Dialogs;
+using Planner.Components.Layout;
 using Planner.Models;
 using SwipeDirection = MudBlazor.SwipeDirection;
 
@@ -130,7 +131,7 @@ namespace Planner.Components.Pages
 
             var parameters = new DialogParameters<CreateCompany>
             {
-                { x => x.CompanyName,  Branch.Name}
+                { x => x.CompanyName, Branch.Name}
             };
 
             var result = await _customDialogService.CreateItemDialog<CreateCompany>("Редактировать филиал", parameters);
@@ -151,7 +152,8 @@ namespace Planner.Components.Pages
                         branch.WeekPlans = Branch.WeekPlans;
 
                         await CompanyManager.UpdateAsync(company);
-                        _navigation?.NavigateTo($"details/{name}", true);
+                        _navigation?.NavigateTo($"details/{name}");
+                        _navigation?.Refresh();
                     }
                 }
             }

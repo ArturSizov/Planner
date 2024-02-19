@@ -17,7 +17,7 @@
                 <MudNavGroup Title="@company.Name" Expanded="false">
                     @foreach (var branch in company.Branches)
                     {
-                        <MudNavLink OnClick="(()=> OpenDetailsBranch(branch.Name))" >@branch.Name</MudNavLink>
+                        <MudNavLink OnClick="(()=> OpenDetailsBranch(branch.Name))">@branch.Name</MudNavLink>
                     }
 
                     <MudToolBar Class="justify-end">

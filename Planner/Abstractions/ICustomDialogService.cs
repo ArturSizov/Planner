@@ -6,11 +6,18 @@ namespace Planner.Abstractions
     public interface ICustomDialogService
     {
         /// <summary>
+        /// Dialog reference
+        /// </summary>
+        IDialogReference? DialogReference { get; set; }
+
+        /// <summary>
         /// Delete item dialog
         /// </summary>
         /// <param name="item">Company end Branch</param>
         /// <returns></returns>
         Task<bool> DeleteItemDialog(string item);
+
+        bool IsOpened { get; set; }
 
         /// <summary>
         /// Create item dialog window

@@ -30,6 +30,6 @@ namespace Planner.Components.Pages
                 if (Branch == null)
                     Branch = new();
             }
-        }              
+        }
     }
 }

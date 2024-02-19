@@ -1,14 +1,15 @@
 ﻿using Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;
+using Planner.Abstractions;
 
 namespace Planner
 {
     public partial class App : Microsoft.Maui.Controls.Application
     {
-        public App()
+        public App(ICustomDialogService customDialogService)
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            MainPage = new MainPage(customDialogService);
 
             //Solves the problem with displaying the virtual keyboard on Android
 

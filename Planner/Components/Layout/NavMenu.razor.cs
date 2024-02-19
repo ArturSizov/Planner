@@ -186,8 +186,11 @@ namespace Planner.Components.Layout
         public void OpenDetailsBranch(string name)
         {
             _navigation?.NavigateTo($"details/{name}", true);
+        }
 
-           StateHasChanged();
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
         }
     }
 }

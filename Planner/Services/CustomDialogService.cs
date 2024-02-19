@@ -15,6 +15,11 @@ namespace Planner.Services
         /// </summary>
         private readonly IDialogService _dialogService;
 
+        /// <inheritdoc/>
+        public IDialogReference? DialogReference { get; set; }
+
+        public bool IsOpened { get; set; }
+
         /// <summary>
         /// Ctor
         /// </summary>
@@ -29,11 +34,18 @@ namespace Planner.Services
         {
             var options = new DialogOptions { DisableBackdropClick = true, ClassBackground = "blackout" };
 
-            var dialog = _dialogService.Show<T>(title, parameters, options);
+            DialogReference = _dialogService.Show<T>(title, parameters, options);
 
-            var result = await dialog.Result;
+            var result = await DialogReference.Result;
 
-            var returnedData = await dialog.GetReturnValueAsync<object>();
+            var returnedData = await DialogReference.GetReturnValueAsync<object>();
+
+            if (IsOpened)
+            {
+                IsOpened = false;
+
+                return (false, returnedData);
+            }
 
             if (!result.Canceled)
                 return (true, returnedData);
@@ -53,9 +65,16 @@ namespace Planner.Services
 
             var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.False, ClassBackground = "blackout" };
 
-            var dialog = _dialogService.Show<CustomDialog>("Удаление", parameters, options);
+            DialogReference = _dialogService.Show<CustomDialog>("Удаление", parameters, options);
 
-            var result = await dialog.Result;
+            var result = await DialogReference.Result;
+
+            if (IsOpened)
+            {
+                IsOpened = false;
+
+                return false;
+            }
 
             if (!result.Canceled)
                 return true;
@@ -76,9 +95,9 @@ namespace Planner.Services
 
             var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.False, ClassBackground = "blackout" };
 
-            var dialog = _dialogService.Show<CustomDialog>("Внимание", parameters, options);
+            DialogReference = _dialogService.Show<CustomDialog>("Внимание", parameters, options);
 
-            var result = await dialog.Result;
+            var result = await DialogReference.Result;
 
             if (!result.Canceled)
                 return true;
