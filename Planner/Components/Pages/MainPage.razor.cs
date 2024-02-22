@@ -13,6 +13,7 @@ namespace Planner.Components.Pages
         /// Branch model
         /// </summary>
         public BranchModel? Branch { get; set; } = new();
+
         /// <summary>
         /// Company data manager
         /// </summary>

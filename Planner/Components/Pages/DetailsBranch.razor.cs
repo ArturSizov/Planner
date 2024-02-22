@@ -10,16 +10,10 @@ namespace Planner.Components.Pages
 {
     partial class DetailsBranch
     {
-
         /// <summary>
-        /// Parameter branch name
+        /// Branch parameter
         /// </summary>
-        [Parameter] public string Name { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Branch model
-        /// </summary>
-        public BranchModel Branch { get; set; } = new();
+        [Parameter] public BranchModel Branch { get; set; } = new();
 
         /// <summary>
         /// Tab panel
@@ -46,16 +40,16 @@ namespace Planner.Components.Pages
         /// </summary>
         protected override void OnInitialized()
         {
-            if (CompanyManager == null)
-                return;
+            //if (CompanyManager == null)
+            //    return;
 
-            foreach (var company in CompanyManager.Items)
-            {
-                var branch = company.Branches.Where(x => x.Name == Name).FirstOrDefault();
+            //foreach (var company in CompanyManager.Items)
+            //{
+            //    var branch = company.Branches.Where(x => x.Name == Name).FirstOrDefault();
 
-                if (branch != null)
-                    Branch = branch;
-            }
+            //    if (branch != null)
+            //        Branch = branch;
+            //}
         }
 
         /// <summary>

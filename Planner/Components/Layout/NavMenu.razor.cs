@@ -3,6 +3,7 @@ using MudBlazor;
 using Planner.Abstractions;
 using Planner.Components.Dialogs;
 using Planner.Models;
+using System.Collections.ObjectModel;
 
 namespace Planner.Components.Layout
 {
@@ -16,12 +17,22 @@ namespace Planner.Components.Layout
         /// <summary>
         /// Company data manager
         /// </summary>
-        [Inject] public IDataManager<CompanyModel>? CompanyManager { get; set; }
+        [Inject] private IDataManager<CompanyModel>? _companyManager { get; set; }
 
         /// <summary>
         /// Page navigation
         /// </summary>
         [Inject] private NavigationManager? _navigation { get; set; }
+
+        /// <summary>
+        /// Returning select branch parameter
+        /// </summary>
+        [Parameter] public EventCallback<BranchModel> GetBranch { get; set; }
+
+        /// <summary>
+        /// Companies parameter
+        /// </summary>
+        [Parameter] public ObservableCollection<CompanyModel>? Companies { get; set; }
 
 
         /// <summary>
@@ -38,7 +49,7 @@ namespace Planner.Components.Layout
 
             if (result.Item1 && companyName != null)
             {
-                CompanyManager?.CreateAsync(new CompanyModel
+                _companyManager?.CreateAsync(new CompanyModel
                 {
                     Name = companyName
                 });
@@ -49,27 +60,27 @@ namespace Planner.Components.Layout
                 return;
 
 
-            if (CompanyManager == null)
+            if (_companyManager == null)
                 return;
 
-            if (CompanyManager.Items.Any(x => x.Branches.Count <= 0))
+            if (_companyManager.Items.Any(x => x.Branches.Count <= 0))
             {
-                var company = CompanyManager?.Items.FirstOrDefault(x => x.Name == companyName);
+                var company = _companyManager?.Items.FirstOrDefault(x => x.Name == companyName);
 
                 var resultBranch = await _customDialogService.CreateItemDialog<CreateCompany>("Добавить филиал", []);
 
                 if (resultBranch.Item1 && resultBranch.Item2 is string name && company != null)
                 {
-                    CompanyManager?.Items?.FirstOrDefault(x => x.Name == company.Name)?.
+                    _companyManager?.Items?.FirstOrDefault(x => x.Name == company.Name)?.
                         Branches.Add(
                         new BranchModel
                         {
                             Name = name,
-                            Default = !CompanyManager.Items.Any(x => x.Branches.Any(b => b.Default == true))
+                            Default = !_companyManager.Items.Any(x => x.Branches.Any(b => b.Default == true))
                         });
 
-                    if (CompanyManager != null)
-                        await CompanyManager.UpdateAsync(company);
+                    if (_companyManager != null)
+                        await _companyManager.UpdateAsync(company);
 
                     _navigation?.NavigateTo($"details/{name}", true);
 
@@ -95,7 +106,7 @@ namespace Planner.Components.Layout
 
             var result = await _customDialogService.CreateItemDialog<CreateCompany>("Редактировать компанию", parameters);
 
-            if (result.Item1 && company != null && CompanyManager != null)
+            if (result.Item1 && company != null && _companyManager != null)
             {
                 if (result.Item2 is string name)
                 {
@@ -106,7 +117,7 @@ namespace Planner.Components.Layout
                         Branches = company.Branches
                     };
 
-                    await CompanyManager.UpdateAsync(newCompany);
+                    await _companyManager.UpdateAsync(newCompany);
                 }
             }
             else 
@@ -129,24 +140,24 @@ namespace Planner.Components.Layout
 
             if (result.Item1 && result.Item2 is string name)
             {
-                CompanyManager?.Items?.FirstOrDefault(x => x.Name == company.Name)?.
+                _companyManager?.Items?.FirstOrDefault(x => x.Name == company.Name)?.
                     Branches.Add(
                     new BranchModel
                     {
                         Name = name,
-                        Default = !CompanyManager.Items.Any(x => x.Branches.Any(b => b.Default == true))
+                        Default = !_companyManager.Items.Any(x => x.Branches.Any(b => b.Default == true))
                     });
 
-                if (CompanyManager != null)
-                    await CompanyManager.UpdateAsync(company);
+                if (_companyManager != null)
+                    await _companyManager.UpdateAsync(company);
 
                 _navigation?.NavigateTo($"details/{name}", true);
 
                 StateHasChanged();
             }
             else
-                if (CompanyManager != null)
-                await CompanyManager.UpdateAsync(company);
+                if (_companyManager != null)
+                await _companyManager.UpdateAsync(company);
         }
 
         /// <summary>
@@ -161,15 +172,15 @@ namespace Planner.Components.Layout
 
             var result = await _customDialogService.DeleteItemDialog(company.Name);
 
-            if (result && company != null && CompanyManager != null)
+            if (result && company != null && _companyManager != null)
             {
-                await CompanyManager.DeleteAsync(company);
+                await _companyManager.DeleteAsync(company);
 
-                if(!CompanyManager.Items.Any(x => x.Branches.Count != 0) || CompanyManager.Items.Count <= 0)
+                if(!_companyManager.Items.Any(x => x.Branches.Count != 0) || _companyManager.Items.Count <= 0)
                     _navigation?.NavigateTo("/welcome", true);
                 else
                 {
-                    var branch = CompanyManager.Items.SelectMany(x => x.Branches).FirstOrDefault(b => b.Name != string.Empty);
+                    var branch = _companyManager.Items.SelectMany(x => x.Branches).FirstOrDefault(b => b.Name != string.Empty);
 
                     if (branch != null)
                         _navigation?.NavigateTo($"/details/{branch.Name}", true);
@@ -177,20 +188,6 @@ namespace Planner.Components.Layout
             }
 
             StateHasChanged();
-        }
-
-        /// <summary>
-        /// Opening detail branch page
-        /// </summary>
-        /// <param name="name"></param>
-        public void OpenDetailsBranch(string name)
-        {
-            _navigation?.NavigateTo($"details/{name}", true);
-        }
-
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
         }
     }
 }

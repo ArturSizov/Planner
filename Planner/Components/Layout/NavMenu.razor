@@ -6,18 +6,18 @@
         <MudText Class="d-flex align-center" Typo="Typo.h5" Style="color:white; margin-left:-15px">Planner</MudText>
     </MudStack>
 
-    @if (CompanyManager == null)
+    @if (_companyManager == null)
         return;
 
     <MudStack Style=" height: calc(100vh - (var(--mud-appbar-height) + 80px))">
-        @if (CompanyManager.Items.Count != 0)
+        @if (Companies?.Count != 0 && Companies != null)
         {
-            @foreach (var company in CompanyManager.Items)
+            @foreach (var company in Companies)
             {
                 <MudNavGroup Title="@company.Name" Expanded="false">
                     @foreach (var branch in company.Branches)
                     {
-                        <MudNavLink OnClick="(()=> OpenDetailsBranch(branch.Name))">@branch.Name</MudNavLink>
+                        <MudNavLink OnClick="(async()=> await GetBranch.InvokeAsync(branch))">@branch.Name</MudNavLink>
                     }
 
                     <MudToolBar Class="justify-end">

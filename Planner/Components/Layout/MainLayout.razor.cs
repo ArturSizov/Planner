@@ -15,7 +15,7 @@ namespace Planner.Components.Layout
         /// <summary>
         /// Company data manager
         /// </summary>
-        [Inject] private IDataManager<CompanyModel>? _companyManager { get; set; }
+        [Inject] public IDataManager<CompanyModel>? CompanyManager { get; set; }
 
         /// <summary>
         /// Snackbar
@@ -45,8 +45,7 @@ namespace Planner.Components.Layout
         /// <summary>
         /// Branch model
         /// </summary>
-        private BranchModel? _branch;
-
+        public BranchModel? Branch { get; set; }
         
         /// <summary>
         /// Color branch star
@@ -86,11 +85,11 @@ namespace Planner.Components.Layout
         /// <returns></returns>
         public async Task SetDefaultBranch()
         {
-            if (_companyManager != null)
+            if (CompanyManager != null)
             {
                 ColorBranch = Color.Warning;
 
-                foreach (var company in _companyManager.Items)
+                foreach (var company in CompanyManager.Items)
                 {
                     foreach (var branch in company.Branches)
                     {
@@ -105,7 +104,7 @@ namespace Planner.Components.Layout
                             branch.Default = true;
                         }
 
-                        await _companyManager.UpdateAsync(company);
+                        await CompanyManager.UpdateAsync(company);
 
                         if (_snackbar == null)
                             return;
@@ -121,15 +120,15 @@ namespace Planner.Components.Layout
         /// </summary>
         protected override void OnParametersSet()
         {
-            if (_companyManager != null && Name == null)
+            if (CompanyManager != null && Name == null)
             {
-                _company = _companyManager.Items.FirstOrDefault(x => x.Branches.Any(c => c.Default == true));
+                _company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(c => c.Default == true));
 
-                _branch = _company?.Branches.FirstOrDefault(x => x.Default == true);
+                Branch = _company?.Branches.FirstOrDefault(x => x.Default == true);
 
-                if (_branch != null)
+                if (Branch != null)
                 {
-                    Name = _branch.Name;
+                    Name = Branch.Name;
 
                     ColorBranch = Color.Warning;
                 }
@@ -147,35 +146,15 @@ namespace Planner.Components.Layout
         /// <returns></returns>
         protected override async Task OnInitializedAsync()
         {
-            if (_companyManager != null)
-            {
-                await _companyManager.ReadAllCompaniesAsync();
+            if (CompanyManager != null)
+                await CompanyManager.ReadAllCompaniesAsync();
+        }
 
-                //Intercepts the branch name
-                if (Body != null)
-                {
-                    if ((Body.Target as RouteView)?.RouteData.RouteValues?.TryGetValue("name", out object? obj) == true)
-                    {
-                        if (obj != null)
-                        {
-                            var res = obj as string;
-
-                            if (res != null)
-                            {
-                                Name = res;
-
-                                _company = _companyManager.Items.FirstOrDefault(x => x.Branches.Any(c => c.Name == Name));
-
-                                _branch = _company?.Branches.FirstOrDefault(x => x.Name == Name);
-
-                               if(_branch != null)
-                                    if (_branch.Default)
-                                        ColorBranch = Color.Warning;
-                            }
-                        }
-                    }
-                }
-            }               
+        public void GetSelectBranch(BranchModel branch)
+        {
+            Branch = branch;
+            DrawerToggle();
+            StatusStar = !Branch.Default;
         }
     }
 }

@@ -7,20 +7,19 @@
 <MudLayout>
     <MudAppBar Style="background-color:#512BD4">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-           @Name
+           @Branch?.Name
         <MudSpacer />
         <MudIconButton Icon="@Icons.Material.Filled.Star" Color="@ColorBranch" Class="mr-1" Disabled="@StatusStar" OnClick="(async()=> await SetDefaultBranch())" />
         <MudIcon Icon="@Icons.Material.Filled.Troubleshoot" Color="Color.Inherit" />
-
     </MudAppBar>
 
     <MudSwipeArea OnSwipeEnd="HandleSwipeEnd">
         <MudDrawer @bind-Open="@DrawerOpen">
-            <NavMenu/>
+            <NavMenu Companies="@CompanyManager?.Items" GetBranch="@GetSelectBranch"/>
         </MudDrawer>
         <MudMainContent>
             <MudContainer Class="pa-0">
-                @Body
+                <DetailsBranch Branch="@Branch"></DetailsBranch>
             </MudContainer>
         </MudMainContent>
     </MudSwipeArea>
