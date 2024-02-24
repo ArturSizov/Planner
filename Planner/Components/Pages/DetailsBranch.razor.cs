@@ -4,6 +4,7 @@ using Planner.Abstractions;
 using Planner.Components.Dialogs;
 using Planner.Components.Layout;
 using Planner.Models;
+using System.Collections.ObjectModel;
 using SwipeDirection = MudBlazor.SwipeDirection;
 
 namespace Planner.Components.Pages
@@ -13,7 +14,22 @@ namespace Planner.Components.Pages
         /// <summary>
         /// Branch parameter
         /// </summary>
-        [Parameter] public BranchModel Branch { get; set; } = new();
+        [Parameter] public BranchModel? Branch { get; set; }
+
+        /// <summary>
+        /// Companies parameter
+        /// </summary>
+        [Parameter] public ObservableCollection<CompanyModel>? Companies { get; set; }
+
+        /// <summary>
+        /// Delete branch parameter
+        /// </summary>
+        [Parameter] public EventCallback<BranchModel> DeleteBranch { get; set; }
+
+        /// <summary>
+        /// Edit branch parameter
+        /// </summary>
+        [Parameter] public EventCallback<BranchModel>EditBranch { get; set; }
 
         /// <summary>
         /// Tab panel
@@ -26,65 +42,9 @@ namespace Planner.Components.Pages
         [Inject] private ICustomDialogService? _customDialogService { get; set; }
 
         /// <summary>
-        /// Page navigation
-        /// </summary>
-        [Inject] private NavigationManager? _navigation { get; set; }
-
-        /// <summary>
         /// Company data manager
         /// </summary>
-        [Inject] public IDataManager<CompanyModel>? CompanyManager { get; set; }
-
-        /// <summary>
-        /// Initialized page
-        /// </summary>
-        protected override void OnInitialized()
-        {
-            //if (CompanyManager == null)
-            //    return;
-
-            //foreach (var company in CompanyManager.Items)
-            //{
-            //    var branch = company.Branches.Where(x => x.Name == Name).FirstOrDefault();
-
-            //    if (branch != null)
-            //        Branch = branch;
-            //}
-        }
-
-        /// <summary>
-        /// Delete branch
-        /// </summary>
-        /// <returns></returns>
-        public async Task DeleteBranchAsync()
-        {
-            if (_customDialogService == null)
-                return;
-            var result = await _customDialogService.DeleteItemDialog(Branch.Name);
-
-            if (result && Branch != null && CompanyManager != null)
-            {
-                var company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(c => c.Name == Branch.Name));
-
-                if (company != null)
-                {
-                    company.Branches.Remove(Branch);
-
-                    if(Branch.Default)
-                    {
-                        foreach (var branch in company.Branches)
-                        {
-                            branch.Default = true;
-                            break;
-                        }
-                    }
-
-                    await CompanyManager.UpdateAsync(company);
-                    _navigation?.NavigateTo("/", true);
-                }
-            }
-            StateHasChanged();
-        }
+        [Inject] public IDataManager<CompanyModel>? _companyManager { get; set; }
 
         /// <summary>
         /// Create service open dialog window
@@ -97,62 +57,19 @@ namespace Planner.Components.Pages
 
             var result = await _customDialogService.CreateItemDialog<CreateService>("Добавить услугу", []);
 
-            if (result.Item1 && result.Item2 is ServiceModel service && CompanyManager != null)
+            if (result.Item1 && result.Item2 is ServiceModel service && _companyManager != null)
             {
-                var company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(b => b.Name == Branch.Name));
+                var company = _companyManager.Items.FirstOrDefault(x => x.Branches.Any(b => b.Name == Branch?.Name));
 
                 if (company != null)
                 {
-                    Branch.Services.Add(service);
+                    Branch?.Services.Add(service);
 
-                    Branch.WeekPlans.Add(new WeekServiceModel { Service = new ServiceModel { Name = service.Name, Plan = 0, Fact = 0} });
+                    Branch?.WeekPlans.Add(new WeekServiceModel { Service = new ServiceModel { Name = service.Name, Plan = 0, Fact = 0} });
 
-                    await CompanyManager.UpdateAsync(company);
+                    await _companyManager.UpdateAsync(company);
                 }               
             }
-
-            StateHasChanged();
-        }
-
-        /// <summary>
-        /// Edit branch
-        /// </summary>
-        /// <returns></returns>
-        public async Task EditBranchAsync()
-        {
-            if (_customDialogService == null)
-                return;
-
-            var parameters = new DialogParameters<CreateCompany>
-            {
-                { x => x.CompanyName, Branch.Name}
-            };
-
-            var result = await _customDialogService.CreateItemDialog<CreateCompany>("Редактировать филиал", parameters);
-
-            if (result.Item1 && Branch != null && CompanyManager != null)
-            {
-                var company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(c => c.Name == Branch.Name));
-
-                if (result.Item2 is string name && company != null)
-                {
-                    var branch = company.Branches.FirstOrDefault(x => x.Name == Branch.Name);
-
-                    if(branch != null)
-                    {
-                        branch.Name = name;
-                        branch.Services = Branch.Services;
-                        branch.Default = Branch.Default;
-                        branch.WeekPlans = Branch.WeekPlans;
-
-                        await CompanyManager.UpdateAsync(company);
-                        _navigation?.NavigateTo($"details/{name}");
-                        _navigation?.Refresh();
-                    }
-                }
-            }
-            else
-                return;
 
             StateHasChanged();
         }
@@ -174,9 +91,9 @@ namespace Planner.Components.Pages
                 Name = service.Name
             };
 
-            if (CompanyManager != null)
+            if (_companyManager != null)
             {
-                var company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(b => b.Name == Branch.Name));
+                var company = _companyManager.Items.FirstOrDefault(x => x.Branches.Any(b => b.Name == Branch?.Name));
 
                 var parameters = new DialogParameters<CreateService>
                 {
@@ -185,7 +102,7 @@ namespace Planner.Components.Pages
 
                 var result = await _customDialogService.CreateItemDialog<CreateService>("Редактировать услугу", parameters);
 
-                if (result.Item1 && service != null && CompanyManager != null)
+                if (result.Item1 && service != null && _companyManager != null)
                 {
                     if (result.Item2 is ServiceModel newService && company != null)
                     {
@@ -196,7 +113,7 @@ namespace Planner.Components.Pages
                             service.Fact = newService.Fact;
                         }
 
-                        await CompanyManager.UpdateAsync(company);
+                        await _companyManager.UpdateAsync(company);
                     }
                 }
                 else
@@ -218,17 +135,17 @@ namespace Planner.Components.Pages
                 return;
             var result = await _customDialogService.DeleteItemDialog(service.Name);
 
-            if (result && CompanyManager != null)
+            if (result && _companyManager != null)
             {
-                var company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(b => b.Name == Branch.Name));
+                var company = _companyManager.Items.FirstOrDefault(x => x.Branches.Any(b => b.Name == Branch?.Name));
 
-                var weekService = Branch.WeekPlans.FirstOrDefault(x => x.Service.Name == service.Name);
+                var weekService = Branch?.WeekPlans.FirstOrDefault(x => x.Service.Name == service.Name);
 
                 if (company != null && weekService != null)
                 {
-                    Branch.Services.Remove(service);
-                    Branch.WeekPlans.Remove(weekService);
-                    await CompanyManager.UpdateAsync(company);
+                    Branch?.Services.Remove(service);
+                    Branch?.WeekPlans.Remove(weekService);
+                    await _companyManager.UpdateAsync(company);
                 }
 
                 StateHasChanged();

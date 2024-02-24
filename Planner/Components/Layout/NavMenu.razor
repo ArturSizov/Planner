@@ -6,22 +6,22 @@
         <MudText Class="d-flex align-center" Typo="Typo.h5" Style="color:white; margin-left:-15px">Planner</MudText>
     </MudStack>
 
-    @if (_companyManager == null)
+    @if (CompanyManager == null)
         return;
 
     <MudStack Style=" height: calc(100vh - (var(--mud-appbar-height) + 80px))">
-        @if (Companies?.Count != 0 && Companies != null)
+        @if (CompanyManager.Items?.Count != 0 && CompanyManager.Items != null)
         {
-            @foreach (var company in Companies)
+            @foreach (var company in CompanyManager.Items)
             {
                 <MudNavGroup Title="@company.Name" Expanded="false">
                     @foreach (var branch in company.Branches)
                     {
-                        <MudNavLink OnClick="(async()=> await GetBranch.InvokeAsync(branch))">@branch.Name</MudNavLink>
+                        <MudNavLink OnClick="@(async()=> await SelectBranch.InvokeAsync(branch))">@branch.Name</MudNavLink>
                     }
 
                     <MudToolBar Class="justify-end">
-                        <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="@(async()=> await CreateBranchAsync(company))" />
+                        <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="@(async()=> await CreateBranch.InvokeAsync(company))" />
                         <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" OnClick="@(async()=> await EditCompanyAsync(company))" />
                         <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(async()=> await DeleteCompanyAsync(company))" />
                     </MudToolBar>

@@ -1,16 +1,21 @@
 ﻿@page "/details/{name}"
 
-@if (string.IsNullOrEmpty(Branch.Name) || CompanyManager?.Items.Count <= 0)
+@* @if (Branch == null || Companies?.Count <= 0)
 {
     <WelcomeComponent/>
     return;
-}
+} *@
 
 <MudSwipeArea OnSwipeEnd="HandleSwipeEnd">
+    @if (Branch == null)
+    {
+        <WelcomeComponent />
+        return;
+    }
     <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Transparent" @ref="Tabs">
         <MudTabPanel Text="План/Факт месяца" Icon="@Icons.Material.Filled.AddChart" ID="@("pn_one")">
-            <MudStack Class="full-screen">
-                @if (Branch.Services.Count > 0)
+            <MudStack Class="full-screen">               
+                @if (Branch?.Services.Count > 0)
                 {
                     @foreach (var service in Branch.Services)
                     {
@@ -33,17 +38,16 @@
                 }
             </MudStack>
 
-
             <MudToolBar Class="justify-end">
                 <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="(async()=> await CreateServiceAsync())" />
-                <MudIconButton Icon="@Icons.Material.Outlined.Edit" OnClick="(async()=> await EditBranchAsync())" Color="Color.Success" />
-                <MudIconButton Icon="@Icons.Material.Outlined.Delete" OnClick="(async()=> await DeleteBranchAsync())" Color="Color.Error" />
+                <MudIconButton Icon="@Icons.Material.Outlined.Edit" OnClick="(async()=> await EditBranch.InvokeAsync(Branch))" Color="Color.Success" />
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" OnClick="(async()=> await DeleteBranch.InvokeAsync(Branch))" Color="Color.Error" />
             </MudToolBar>
         </MudTabPanel>
 
         <MudTabPanel Text="План недели" Icon="@Icons.Material.Filled.TrendingUp" ID="@("pn_two")">
             <MudStack Class="full-screen" Style="height: calc(100vh - (var(--mud-appbar-height) + 55px))">
-                @if (Branch.Services.Count > 0)
+                @if (Branch?.Services.Count > 0)
                 {
                     @foreach (var weekPlan in Branch.WeekPlans)
                     {
