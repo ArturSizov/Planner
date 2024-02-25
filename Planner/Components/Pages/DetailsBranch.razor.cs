@@ -24,12 +24,12 @@ namespace Planner.Components.Pages
         /// <summary>
         /// Delete branch parameter
         /// </summary>
-        [Parameter] public EventCallback<BranchModel> DeleteBranch { get; set; }
+        [Parameter] public EventCallback DeleteBranch { get; set; }
 
         /// <summary>
         /// Edit branch parameter
         /// </summary>
-        [Parameter] public EventCallback<BranchModel>EditBranch { get; set; }
+        [Parameter] public EventCallback EditBranch { get; set; }
 
         /// <summary>
         /// Tab panel

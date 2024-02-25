@@ -62,11 +62,31 @@ namespace Planner.Components.Layout
         /// Color branch star
         /// </summary>
         private Color _colorStar;
+        private BranchModel? _branch;
 
         /// <summary>
         /// Branch model
         /// </summary>
-        public BranchModel? Branch { get; set; }
+        public BranchModel? Branch
+        {
+            get
+            {
+                if (_branch == null)
+                {
+                    Name = "Planner";
+                    StatusStar = true;
+                }
+                else
+                {
+                    Name = _branch.Name;
+                    StatusStar = false;
+                }
+                    
+                return _branch;
+            }
+
+            set => _branch = value;
+        }
 
         /// <summary>
         /// Color branch star
@@ -172,15 +192,7 @@ namespace Planner.Components.Layout
 
                 _company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(c => c.Default == true));
 
-                Branch = _company?.Branches.FirstOrDefault(x => x.Default);
-
-                if (Branch == null)
-                {
-                    Name = "Planner";
-                    StatusStar = true;
-                }
-                else
-                    Name = Branch.Name;
+                Branch = _company?.Branches.FirstOrDefault(x => x.Default);               
             }
         }
 
@@ -190,7 +202,10 @@ namespace Planner.Components.Layout
         /// <param name="branch"></param>
         public void GetSelectBranch(BranchModel branch)
         {
+            _company = CompanyManager?.Items.FirstOrDefault(x => x.Branches.Any(c => c.Name == branch.Name));
+
             Branch = branch;
+
             Name = branch.Name;
 
             DrawerToggle();
@@ -206,6 +221,8 @@ namespace Planner.Components.Layout
             if (_customDialogService == null)
                 return;
 
+            _company = company;
+
             var result = await _customDialogService.CreateItemDialog<CreateCompany>("Добавить филиал", []);
 
             if (result.Item1 && result.Item2 is string name && CompanyManager != null)
@@ -216,9 +233,10 @@ namespace Planner.Components.Layout
                     Default = !CompanyManager.Items.Any(x => x.Branches.Any(b => b.Default == true))
                 };
 
-                CompanyManager.Items.FirstOrDefault(x => x.Name == company.Name)?.Branches.Add(branch);
+                _company?.Branches.Add(branch);
 
-                await CompanyManager.UpdateAsync(company);
+                if(_company != null)
+                    await CompanyManager.UpdateAsync(_company);
 
                 GetSelectBranch(branch);
             }
@@ -228,34 +246,32 @@ namespace Planner.Components.Layout
         /// Delete branch
         /// </summary>
         /// <returns></returns>
-        public async Task DeleteBranchAsync(BranchModel branch)
+        public async Task DeleteBranchAsync()
         {
-            if (_customDialogService == null)
+            if (_customDialogService == null || Branch == null)
                 return;
-            var result = await _customDialogService.DeleteItemDialog(branch.Name);
+
+            var result = await _customDialogService.DeleteItemDialog(Branch.Name);
 
             if (result && Branch != null && CompanyManager != null)
             {
-                var company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(c => c.Name == branch.Name));
-
-                if (company != null)
+                if (_company != null)
                 {
-                    company.Branches.Remove(branch);
+                    _company.Branches.Remove(Branch);
 
-                    if (Branch.Default)
+                    foreach (var item in _company.Branches)
                     {
-                        foreach (var item in company.Branches)
-                        {
-                            item.Default = true;
-                            break;
-                        }
+                        item.Default = true;
+                        break;
                     }
 
-                    await CompanyManager.UpdateAsync(company);
+                    await CompanyManager.UpdateAsync(_company);
 
-                    Name = Branch.Name;
+                    _branch = _company?.Branches.FirstOrDefault(x => x.Default);
 
-                    await OnInitializedAsync();
+                    if (_branch != null)
+                        Name = _branch?.Name;
+                    else Name = "Planner";
                 }
             }
         }
@@ -278,22 +294,16 @@ namespace Planner.Components.Layout
 
             if (result.Item1 && Branch != null && CompanyManager != null && CompanyManager.Items != null)
             {
-                var company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(c => c.Name == Branch.Name));
 
-                if (result.Item2 is string name && company != null)
+                if (result.Item2 is string name && _company != null)
                 {
-                    var branch = company.Branches.FirstOrDefault(x => x.Name == Branch.Name);
-
-                    if (branch != null)
+                    if (Branch != null)
                     {
-                        branch.Name = name;
-                        branch.Services = Branch.Services;
-                        branch.Default = Branch.Default;
-                        branch.WeekPlans = Branch.WeekPlans;
+                        Branch.Name = name;
+ 
+                        await CompanyManager.UpdateAsync(_company);
 
-                        await CompanyManager.UpdateAsync(company);
-
-                        GetSelectBranch(branch);
+                        GetSelectBranch(Branch);
 
                         DrawerOpen = false;
                     }
