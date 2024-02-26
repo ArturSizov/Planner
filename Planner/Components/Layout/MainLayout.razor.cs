@@ -80,8 +80,7 @@ namespace Planner.Components.Layout
         /// <summary>
         /// Drawer open
         /// </summary>
-        public bool DrawerOpen = true;
-        
+        public bool DrawerOpen = true;        
 
         /// <summary>
         /// Branch model
@@ -168,7 +167,6 @@ namespace Planner.Components.Layout
             }
         }
 
-
         /// <summary>
         ///  On initialized Main Layout
         /// </summary>
@@ -201,11 +199,7 @@ namespace Planner.Components.Layout
             var company = new CompanyModel { Name = companyName };
 
             if (result.Item1 && companyName != null)
-            {
                 CompanyManager?.CreateAsync(company);
-
-                StateHasChanged();
-            }
             else
                 return;
 
@@ -231,6 +225,42 @@ namespace Planner.Components.Layout
 
                 DrawerOpen = false;
             }
+        }
+
+
+        /// <summary>
+        /// Edit company
+        /// </summary>
+        /// <param name="company"></param>
+        /// <returns></returns>
+        public async Task EditCompanyAsync(CompanyModel company)
+        {
+            if (_customDialogService == null)
+                return;
+
+            var parameters = new DialogParameters<CreateCompany>
+            {
+                { x => x.CompanyName,  company.Name}
+            };
+
+            var result = await _customDialogService.CreateItemDialog<CreateCompany>("Редактировать компанию", parameters);
+
+            if (result.Item1 && company != null && CompanyManager != null)
+            {
+                if (result.Item2 is string name)
+                {
+                    var newCompany = new CompanyModel
+                    {
+                        Id = company.Id,
+                        Name = name,
+                        Branches = company.Branches
+                    };
+
+                    await CompanyManager.UpdateAsync(newCompany);
+                }
+            }
+            else
+                return;
         }
 
         /// <summary>

@@ -21,7 +21,7 @@
 
                     <MudToolBar Class="justify-end">
                         <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="@(async()=> await CreateBranch.InvokeAsync(company))" />
-                        <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" OnClick="@(async()=> await EditCompanyAsync(company))" />
+                        <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" OnClick="@(async()=> await EditCompany.InvokeAsync(company))" />
                         <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(async()=> await DeleteCompany.InvokeAsync(company))" />
                     </MudToolBar>
                 </MudNavGroup>
