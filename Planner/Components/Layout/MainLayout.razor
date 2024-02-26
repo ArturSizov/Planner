@@ -15,7 +15,7 @@
 
     <MudSwipeArea OnSwipeEnd="HandleSwipeEnd">
         <MudDrawer @bind-Open="@DrawerOpen">
-            <NavMenu SelectBranch="@GetSelectBranch" CreateBranch="@CreateBranchAsync" />
+            <NavMenu SelectBranch="@GetSelectBranch" CreateBranch="@CreateBranchAsync" CreateCompany="@CreateCompanyAsync" DeleteCompany="@DeleteCompanyAsync"/>
         </MudDrawer>
         <MudMainContent>
             <MudContainer Class="pa-0">

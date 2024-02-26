@@ -1,5 +1,4 @@
-﻿
-<MudNavMenu Margin="Margin.Dense" Color="Color.Warning">
+﻿<MudNavMenu Margin="Margin.Dense" Color="Color.Warning">
 
     <MudStack Row="true" Style="background-color:#512BD4; height:55px">
         <MudIcon Icon="@Icons.Material.Filled.Troubleshoot" Style="color:white" Size="Size.Large" Class="ml-2 mt-2" />
@@ -23,7 +22,7 @@
                     <MudToolBar Class="justify-end">
                         <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="@(async()=> await CreateBranch.InvokeAsync(company))" />
                         <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" OnClick="@(async()=> await EditCompanyAsync(company))" />
-                        <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(async()=> await DeleteCompanyAsync(company))" />
+                        <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(async()=> await DeleteCompany.InvokeAsync(company))" />
                     </MudToolBar>
                 </MudNavGroup>
             }
@@ -38,6 +37,6 @@
     </MudStack>
     <MudStack>
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Class="ml-1 mr-1"
-               Color="Color.Success" Size="Size.Medium" OnClick="@(async()=> await CreateCompanyAsync())">Добавить компанию</MudButton>
+               Color="Color.Success" Size="Size.Medium" OnClick="@(async()=> await CreateCompany.InvokeAsync())">Добавить компанию</MudButton>
     </MudStack>
 </MudNavMenu>

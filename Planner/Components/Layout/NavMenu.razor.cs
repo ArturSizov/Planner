@@ -34,65 +34,9 @@ namespace Planner.Components.Layout
         /// </summary>
         [Parameter] public EventCallback<CompanyModel> CreateBranch { get; set; }
 
-        /// <summary>
-        /// Companies parameter
-        /// </summary>
-        //[Parameter] public ObservableCollection<CompanyModel>? Companies { get; set; }
+        [Parameter] public EventCallback CreateCompany { get; set; }
 
-
-        /// <summary>
-        /// Create company open dialog window
-        /// </summary>
-        public async Task CreateCompanyAsync()
-        {
-            if (_customDialogService == null)
-                return;
-
-            var result = await _customDialogService.CreateItemDialog<CreateCompany>("Добавить компанию", []);
-
-            var companyName = result.Item2 as string;
-
-            if (result.Item1 && companyName != null)
-            {
-                CompanyManager?.CreateAsync(new CompanyModel
-                {
-                    Name = companyName
-                });
-
-                StateHasChanged();
-            }
-            else
-                return;
-
-
-            if (CompanyManager == null)
-                return;
-
-            if (CompanyManager.Items.Any(x => x.Branches.Count <= 0))
-            {
-                var company = CompanyManager?.Items.FirstOrDefault(x => x.Name == companyName);
-
-                var resultBranch = await _customDialogService.CreateItemDialog<CreateCompany>("Добавить филиал", []);
-
-                if (resultBranch.Item1 && resultBranch.Item2 is string name && company != null)
-                {
-                    CompanyManager?.Items?.FirstOrDefault(x => x.Name == company.Name)?.
-                        Branches.Add(
-                        new BranchModel
-                        {
-                            Name = name,
-                            Default = !CompanyManager.Items.Any(x => x.Branches.Any(b => b.Default == true))
-                        });
-
-                    if (CompanyManager != null)
-                        await CompanyManager.UpdateAsync(company);
-
-                    _navigation?.NavigateTo($"details/{name}");
-
-                    StateHasChanged();
-                }
-            }
-        }
+        [Parameter] public EventCallback<CompanyModel> DeleteCompany { get; set; }
 
         /// <summary>
         /// Edit company
@@ -129,30 +73,6 @@ namespace Planner.Components.Layout
                 return;
 
                 StateHasChanged();
-        }
-
-        /// <summary>
-        /// Delete company
-        /// </summary>
-        /// <param name="company">CompanyModel</param>
-        /// <returns></returns>
-        public async Task DeleteCompanyAsync(CompanyModel company)
-        {
-            if (_customDialogService == null)
-                return;
-
-            var result = await _customDialogService.DeleteItemDialog(company.Name);
-
-            if (result && company != null && CompanyManager != null)
-            {
-                await CompanyManager.DeleteAsync(company);
-
-                if(!CompanyManager.Items.Any(x => x.Branches.Count != 0) || CompanyManager.Items.Count <= 0)
-                    _navigation?.NavigateTo("/welcome");
-
-            }
-
-            StateHasChanged();
         }
     }
 }

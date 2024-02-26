@@ -8,7 +8,9 @@ namespace Planner.Models
     public class CompanyModel : BindableObject
     {
         private int _id;
-        private string _name = string.Empty;
+
+        private string? _name;
+
         private ObservableCollection<BranchModel> _branches = [];
 
         public int Id
@@ -21,7 +23,7 @@ namespace Planner.Models
             }
         }
 
-        public string Name
+        public string? Name
         {
             get => _name;
             set

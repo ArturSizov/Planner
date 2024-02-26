@@ -14,6 +14,21 @@ namespace Planner.Components.Layout
     partial class MainLayout
     {
         /// <summary>
+        /// Company model
+        /// </summary>
+        private CompanyModel? _company;
+
+        /// <summary>
+        /// Color branch star
+        /// </summary>
+        private Color _colorStar;
+
+        /// <summary>
+        /// Branch name
+        /// </summary>
+        private string? _name;
+
+        /// <summary>
         /// Dialog service
         /// </summary>
         [Inject] private ICustomDialogService? _customDialogService { get; set; }
@@ -21,11 +36,7 @@ namespace Planner.Components.Layout
         /// <summary>
         /// Snackbar
         /// </summary>
-        [Inject] ISnackbar? _snackbar { get; set; }
-
-        /// <summary>
-        /// Company data manager
-        /// </summary>
+        [Inject] private ISnackbar? _snackbar { get; set; }
 
         /// <summary>
         /// Page navigation
@@ -35,7 +46,25 @@ namespace Planner.Components.Layout
         /// <summary>
         /// Branch name
         /// </summary>
-        public string? Name { get; set; }
+        public string? Name
+        {
+            get
+            {
+                if (Branch == null)
+                {
+                    _name = "Planner";
+                    StatusStar = true;
+                }
+                else
+                {
+                    _name = Branch.Name;
+                    StatusStar = false;
+                }
+                return _name;
+            }
+
+            set => _name = value;
+        }
 
         /// <summary>
         /// Company data manager
@@ -52,41 +81,12 @@ namespace Planner.Components.Layout
         /// Drawer open
         /// </summary>
         public bool DrawerOpen = true;
-
-        /// <summary>
-        /// Company model
-        /// </summary>
-        private CompanyModel? _company;
-
-        /// <summary>
-        /// Color branch star
-        /// </summary>
-        private Color _colorStar;
-        private BranchModel? _branch;
+        
 
         /// <summary>
         /// Branch model
         /// </summary>
-        public BranchModel? Branch
-        {
-            get
-            {
-                if (_branch == null)
-                {
-                    Name = "Planner";
-                    StatusStar = true;
-                }
-                else
-                {
-                    Name = _branch.Name;
-                    StatusStar = false;
-                }
-                    
-                return _branch;
-            }
-
-            set => _branch = value;
-        }
+        public BranchModel? Branch { get; set; }
 
         /// <summary>
         /// Color branch star
@@ -116,10 +116,7 @@ namespace Planner.Components.Layout
         /// <summary>
         /// Open/close menu
         /// </summary>
-        public void DrawerToggle()
-        {
-            DrawerOpen = !DrawerOpen;
-        }
+        public void DrawerToggle() => DrawerOpen = !DrawerOpen;
 
         /// <summary>
         /// Screen swipe event
@@ -171,13 +168,6 @@ namespace Planner.Components.Layout
             }
         }
 
-        /// <summary>
-        /// Parameter set main layout
-        /// </summary>
-        protected override void OnParametersSet()
-        {
-          
-        }
 
         /// <summary>
         ///  On initialized Main Layout
@@ -193,6 +183,53 @@ namespace Planner.Components.Layout
                 _company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(c => c.Default == true));
 
                 Branch = _company?.Branches.FirstOrDefault(x => x.Default);               
+            }
+        }
+
+        /// <summary>
+        /// Create company open dialog window
+        /// </summary>
+        public async Task CreateCompanyAsync()
+        {
+            if (_customDialogService == null)
+                return;
+
+            var result = await _customDialogService.CreateItemDialog<CreateCompany>("Добавить компанию", []);
+
+            var companyName = result.Item2 as string;
+
+            var company = new CompanyModel { Name = companyName };
+
+            if (result.Item1 && companyName != null)
+            {
+                CompanyManager?.CreateAsync(company);
+
+                StateHasChanged();
+            }
+            else
+                return;
+
+           await CreateBranchAsync(company);
+        }
+
+        /// <summary>
+        /// Delete company
+        /// </summary>
+        /// <returns></returns>
+        public async Task DeleteCompanyAsync(CompanyModel company)
+        {
+            if (_customDialogService == null || company?.Name == null)
+                return;
+
+            var result = await _customDialogService.DeleteItemDialog(company.Name);
+
+            if (result && _company != null && CompanyManager != null)
+            {
+                await CompanyManager.DeleteAsync(company);
+
+                Branch = await SetDefaultBranch(company);
+
+                DrawerOpen = false;
             }
         }
 
@@ -248,33 +285,20 @@ namespace Planner.Components.Layout
         /// <returns></returns>
         public async Task DeleteBranchAsync()
         {
-            if (_customDialogService == null || Branch == null)
+            if (_customDialogService == null || Branch == null || CompanyManager == null)
                 return;
 
             var result = await _customDialogService.DeleteItemDialog(Branch.Name);
 
-            if (result && Branch != null && CompanyManager != null)
+            _company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(c => c.Name == Branch.Name));
+  
+            if (result && _company != null)
             {
-                if (_company != null)
-                {
-                    _company.Branches.Remove(Branch);
+                _company.Branches.Remove(Branch);
 
-                    foreach (var item in _company.Branches)
-                    {
-                        item.Default = true;
-                        break;
-                    }
-
-                    await CompanyManager.UpdateAsync(_company);
-
-                    _branch = _company?.Branches.FirstOrDefault(x => x.Default);
-
-                    if (_branch != null)
-                        Name = _branch?.Name;
-                    else Name = "Planner";
-                }
+                Branch = await SetDefaultBranch(_company);
             }
-        }
+        }           
 
         /// <summary>
         /// Edit branch
@@ -311,6 +335,47 @@ namespace Planner.Components.Layout
             }
             else
                 return;
+        }
+
+        /// <summary>
+        /// Sets the default branch
+        /// </summary>
+        /// <param name="company"></param>
+        /// <returns></returns>
+        private async Task <BranchModel> SetDefaultBranch(CompanyModel company)
+        {
+            if (Branch == null || CompanyManager == null)
+                return new BranchModel();
+
+            BranchModel? newBranch = null;
+
+            if (company?.Branches.Count == 0 && company != null)
+            {
+                await CompanyManager.UpdateAsync(company);
+
+                foreach (var item in CompanyManager.Items)
+                {
+                    if (item.Branches.Count != 0)
+                    {
+                        company = item;
+                        break;
+                    }
+                }
+            }
+
+           if(company != null)
+            {
+                foreach (var branch in company.Branches)
+                {
+                    branch.Default = true;
+                    newBranch = branch;
+                    break;
+                }
+
+                await CompanyManager.UpdateAsync(company);
+            }
+
+            return newBranch!;
         }
     }
 }
