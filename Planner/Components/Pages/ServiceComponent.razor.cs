@@ -81,11 +81,7 @@ namespace Planner.Components.Pages
         /// Focus on fact row
         /// </summary>
         /// <returns></returns>
-        public async Task FocusRowFactAsync()
-        {
-            //this js snippet does `document.querySelector(myRef).focus();`
-            await StringFactRef.FocusAsync();
-        }
+        public async Task FocusRowFactAsync() => await StringFactRef.FocusAsync();
 
         /// <summary>
         /// Update company
@@ -120,10 +116,7 @@ namespace Planner.Components.Pages
         /// <summary>
         /// On parameters set
         /// </summary>
-        protected override void OnParametersSet()
-        {
-            UpdateDate();            
-        }
+        protected override void OnParametersSet() => UpdateDate();
 
         /// <summary>
         /// Updates data when the fact field changes/when the page is loaded

@@ -59,21 +59,13 @@ namespace Planner.Components.Pages
         /// Focus on fact row
         /// </summary>
         /// <returns></returns>
-        public async Task FocusRowFactAsync()
-        {
-            //this js snippet does `document.querySelector(myRef).focus();`
-            await StringFactRef.FocusAsync();
-        }
+        public async Task FocusRowFactAsync() => await StringFactRef.FocusAsync();
 
         /// <summary>
         /// Focus on week pLan row
         /// </summary>
         /// <returns></returns>
-        public async Task FocusRowWeekPLanAsync()
-        {
-            //this js snippet does `document.querySelector(myRef).focus();`
-            await StringWeekPlanRef.FocusAsync();
-        }
+        public async Task FocusRowWeekPLanAsync() => await StringWeekPlanRef.FocusAsync();
 
         /// <summary>
         /// Update company
@@ -119,6 +111,8 @@ namespace Planner.Components.Pages
 
             if (service.Fact >= service.Plan)
                 WeekPlan.Service.Plan = 0;
+            else if (daysLeft <= 7)
+                WeekPlan.Service.Plan = (ushort?)delta;
             else
                 WeekPlan.Service.Plan = (ushort?)(Math.Round(delta / daysLeft * 7, 0, MidpointRounding.AwayFromZero));
 
@@ -183,9 +177,6 @@ namespace Planner.Components.Pages
         /// <summary>
         /// Initialized component
         /// </summary>
-        protected override void OnInitialized()
-        {
-            UpdateDate();
-        }
+        protected override void OnInitialized()=> UpdateDate();
     }
 }

@@ -9,7 +9,7 @@ namespace Planner.Models
     {
         private int _id;
 
-        private string? _name;
+        private string _name = string.Empty;
 
         private ObservableCollection<BranchModel> _branches = [];
 
@@ -23,7 +23,7 @@ namespace Planner.Models
             }
         }
 
-        public string? Name
+        public string Name
         {
             get => _name;
             set

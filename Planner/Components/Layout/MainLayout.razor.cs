@@ -163,7 +163,7 @@ namespace Planner.Components.Layout
 
             var companyName = result.Item2 as string;
 
-            var company = new CompanyModel { Name = companyName };
+            var company = new CompanyModel { Name = companyName ?? string.Empty};
 
             if (result.Item1 && companyName != null)
                 CompanyManager?.CreateAsync(company);
@@ -201,14 +201,14 @@ namespace Planner.Components.Layout
         /// </summary>
         /// <param name="company"></param>
         /// <returns></returns>
-        public async Task EditCompanyAsync(CompanyModel company)
+        public async Task EditCompanyAsync(CompanyModel? company)
         {
             if (_customDialogService == null)
                 return;
 
             var parameters = new DialogParameters<CreateCompany>
             {
-                { x => x.CompanyName,  company.Name}
+                { x => x.CompanyName,  company?.Name}
             };
 
             var result = await _customDialogService.CreateItemDialog<CreateCompany>("Редактировать компанию", parameters);
@@ -251,7 +251,7 @@ namespace Planner.Components.Layout
         /// </summary>
         /// <param name="company"></param>
         /// <returns></returns>
-        public async Task CreateBranchAsync(CompanyModel company)
+        public async Task CreateBranchAsync(CompanyModel? company)
         {
             if (_customDialogService == null)
                 return;
