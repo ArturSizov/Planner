@@ -165,7 +165,6 @@ namespace Planner.Components.Pages
                
             if (args.SwipeDirection == SwipeDirection.LeftToRight)
                 Tabs?.ActivatePanel("pn_one");
-
         }
     }
 }

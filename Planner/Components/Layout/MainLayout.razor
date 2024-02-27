@@ -13,7 +13,6 @@
         <MudIcon Icon="@Icons.Material.Filled.Troubleshoot" Color="Color.Inherit" />
     </MudAppBar>
 
-    <MudSwipeArea OnSwipeEnd="HandleSwipeEnd">
         <MudDrawer @bind-Open="@DrawerOpen">
             <NavMenu SelectBranch="@GetSelectBranch" CreateBranch="@CreateBranchAsync" CreateCompany="@CreateCompanyAsync" DeleteCompany="@DeleteCompanyAsync"
                      EditCompany="@EditCompanyAsync"/>
@@ -28,7 +27,6 @@
                 <DetailsBranch Branch="@Branch" DeleteBranch="@DeleteBranchAsync" EditBranch="@EditBranchAsync"/>
             </MudContainer>
         </MudMainContent>
-    </MudSwipeArea>
 </MudLayout>
 
 

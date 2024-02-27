@@ -118,20 +118,6 @@ namespace Planner.Components.Layout
         public void DrawerToggle() => DrawerOpen = !DrawerOpen;
 
         /// <summary>
-        /// Screen swipe event
-        /// </summary>
-        /// <param name="args"></param>
-        public void HandleSwipeEnd(SwipeEventArgs args)
-        {
-            if(args.SwipeDirection == SwipeDirection.LeftToRight)
-                DrawerOpen = true;
-
-            if (args.SwipeDirection == SwipeDirection.RightToLeft)
-                DrawerOpen = false;
-
-        }
-
-        /// <summary>
         /// Sets the default branch
         /// </summary>
         /// <returns></returns>
