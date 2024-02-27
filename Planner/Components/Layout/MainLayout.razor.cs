@@ -171,7 +171,6 @@ namespace Planner.Components.Layout
         ///  On initialized Main Layout
         /// </summary>
         /// <returns></returns>
-
         protected override async Task OnInitializedAsync()
         {
             if (CompanyManager != null)
@@ -210,23 +209,24 @@ namespace Planner.Components.Layout
         /// Delete company
         /// </summary>
         /// <returns></returns>
-        public async Task DeleteCompanyAsync(CompanyModel company)
+        public async Task DeleteCompanyAsync(CompanyModel? company)
         {
             if (_customDialogService == null || company?.Name == null)
                 return;
 
             var result = await _customDialogService.DeleteItemDialog(company.Name);
 
-            if (result && _company != null && CompanyManager != null)
+            if (result && company != null && CompanyManager != null)
             {
                 await CompanyManager.DeleteAsync(company);
+
+                company = new();
 
                 Branch = await SetDefaultBranch(company);
 
                 DrawerOpen = false;
             }
         }
-
 
         /// <summary>
         /// Edit company
@@ -306,6 +306,8 @@ namespace Planner.Components.Layout
                     await CompanyManager.UpdateAsync(_company);
 
                 GetSelectBranch(branch);
+
+                DrawerOpen = false;
             }
         }
 
@@ -372,16 +374,17 @@ namespace Planner.Components.Layout
         /// </summary>
         /// <param name="company"></param>
         /// <returns></returns>
-        private async Task <BranchModel> SetDefaultBranch(CompanyModel company)
+        private async Task<BranchModel?> SetDefaultBranch(CompanyModel? company)
         {
-            if (Branch == null || CompanyManager == null)
-                return new BranchModel();
-
             BranchModel? newBranch = null;
+
+            if (Branch == null || CompanyManager == null)
+                return newBranch;
 
             if (company?.Branches.Count == 0 && company != null)
             {
-                await CompanyManager.UpdateAsync(company);
+                if(!string.IsNullOrEmpty(company.Name))
+                    await CompanyManager.UpdateAsync(company);
 
                 foreach (var item in CompanyManager.Items)
                 {
@@ -393,7 +396,7 @@ namespace Planner.Components.Layout
                 }
             }
 
-           if(company != null)
+            if (company != null)
             {
                 foreach (var branch in company.Branches)
                 {
@@ -405,7 +408,7 @@ namespace Planner.Components.Layout
                 await CompanyManager.UpdateAsync(company);
             }
 
-            return newBranch!;
+            return newBranch;
         }
     }
 }

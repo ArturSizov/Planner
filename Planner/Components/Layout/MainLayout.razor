@@ -20,6 +20,11 @@
         </MudDrawer>
         <MudMainContent>
             <MudContainer Class="pa-0">
+                @if (@Branch == null)
+                {
+                    <WelcomeComponent CreateCompany="@CreateCompanyAsync"/>
+                    return;
+                }
                 <DetailsBranch Branch="@Branch" DeleteBranch="@DeleteBranchAsync" EditBranch="@EditBranchAsync"/>
             </MudContainer>
         </MudMainContent>

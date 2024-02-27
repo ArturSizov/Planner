@@ -2,7 +2,6 @@
 using MudBlazor;
 using Planner.Abstractions;
 using Planner.Components.Dialogs;
-using Planner.Components.Layout;
 using Planner.Models;
 using System.Collections.ObjectModel;
 using SwipeDirection = MudBlazor.SwipeDirection;
