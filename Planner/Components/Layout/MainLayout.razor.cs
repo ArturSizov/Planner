@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.Maui;
 using MudBlazor;
 using Planner.Abstractions;
-using Planner.Auxiliary;
 using Planner.Components.Dialogs;
 using Planner.Models;
 using Color = MudBlazor.Color;
@@ -39,11 +37,6 @@ namespace Planner.Components.Layout
         [Inject] private ISnackbar? _snackbar { get; set; }
 
         /// <summary>
-        /// Page navigation
-        /// </summary>
-        [Inject] private NavigationManager? _navigation { get; set; }
-
-        /// <summary>
         /// Branch name
         /// </summary>
         public string? Name
@@ -71,17 +64,11 @@ namespace Planner.Components.Layout
         /// </summary>
         [Inject] public IDataManager<CompanyModel>? CompanyManager { get; set; }
 
-
         /// <summary>
         /// Swipe direction
         /// </summary>
         public SwipeDirection SwipeDirection { get; set; }
-
-        /// <summary>
-        /// Drawer open
-        /// </summary>
-        public bool DrawerOpen = true;        
-
+   
         /// <summary>
         /// Branch model
         /// </summary>
@@ -111,11 +98,6 @@ namespace Planner.Components.Layout
         /// Enabled/disabled status star
         /// </summary>
         public bool StatusStar { get; set; } = false;
-
-        /// <summary>
-        /// Open/close menu
-        /// </summary>
-        public void DrawerToggle() => DrawerOpen = !DrawerOpen;
 
         /// <summary>
         /// Sets the default branch
@@ -165,7 +147,7 @@ namespace Planner.Components.Layout
 
                 _company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(c => c.Default == true));
 
-                Branch = _company?.Branches.FirstOrDefault(x => x.Default);               
+                Branch = _company?.Branches.FirstOrDefault(x => x.Default);
             }
         }
 
@@ -210,7 +192,7 @@ namespace Planner.Components.Layout
 
                 Branch = await SetDefaultBranch(company);
 
-                DrawerOpen = false;
+                _customDialogService.IsOpened = false;
             }
         }
 
@@ -261,7 +243,7 @@ namespace Planner.Components.Layout
 
             Name = branch.Name;
 
-            DrawerToggle();
+            _customDialogService?.DrawerToggle();
         }
 
         /// <summary>
@@ -293,7 +275,7 @@ namespace Planner.Components.Layout
 
                 GetSelectBranch(branch);
 
-                DrawerOpen = false;
+                _customDialogService.IsOpened = false;
             }
         }
 
@@ -347,7 +329,7 @@ namespace Planner.Components.Layout
 
                         GetSelectBranch(Branch);
 
-                        DrawerOpen = false;
+                        _customDialogService.IsOpened = false;
                     }
                 }
             }

@@ -22,7 +22,7 @@
                         <ChildContent>
                             @foreach (var branch in company.Branches)
                             {
-                                <MudMenuItem OnAction="@(async()=> await SelectBranch.InvokeAsync(branch))">@branch.Name</MudMenuItem>
+                                <MudMenuItem ForceLoad="true" OnAction="@(async()=> await SelectBranch.InvokeAsync(branch))">@branch.Name</MudMenuItem>
                             }
                             <MudToolBar Class="justify-end m-1">
                                 <MudIconButton Size="Size.Medium" Icon="@Icons.Material.Outlined.Add" OnClick="@(async()=> await CreateBranch.InvokeAsync(company))" />

@@ -99,7 +99,7 @@
       <Folder Include="Controls\" />
     </ItemGroup>
 
-    <ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionPlannerHideInfoBar="True" /></VisualStudio></ProjectExtensions>
+    <ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionPlannerHideInfoBar="True" XamarinHotReloadGenericExceptionInfoBarPlannerHideInfoBar="True" /></VisualStudio></ProjectExtensions>
 
     <ItemGroup>
       <UpToDateCheckInput Remove="Components\Dialogs\Notes.razor" />

@@ -4,8 +4,13 @@ namespace Planner
 {
     public partial class MainPage : ContentPage
     {
+        /// <inheritdoc/>
         private ICustomDialogService _customDialogService;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="customDialogService"></param>
         public MainPage(ICustomDialogService customDialogService)
         {
             InitializeComponent();
@@ -13,25 +18,49 @@ namespace Planner
             _customDialogService = customDialogService;
         }
 
+        /// <summary>
+        /// Logica back button
+        /// </summary>
+        /// <returns></returns>
         protected override bool OnBackButtonPressed()
         {
-            var result = _customDialogService?.DialogReference;
+            bool result;
 
-            if(result?.Dialog != null)
+            //This logic doesn't work. I haven't found a solution yet
+
+            //if (_customDialogService.IsOpened)
+            //{
+            //    _customDialogService.DrawerToggle();
+            //    result = true;
+            //}
+
+            var dialogResult = _customDialogService?.DialogReference;
+
+            if (dialogResult?.Dialog != null)
             {
                 if (_customDialogService == null)
-                    return false;
+                    return result = false;
 
                 _customDialogService.IsOpened = true;
 
-                result.Close();
+                dialogResult.Close();
 
                 _customDialogService.DialogReference = null;
 
-                return true;
+                result = true;
             }
+            else result = false;
 
-            return false;
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                if (!result)
+                {
+                    if (await DisplayAlert("Внимание!", "Закрыть приложение?", "Да", "Нет"))
+                        Application.Current?.Quit();
+                }
+            });
+
+            return true;
         }
     }
 }

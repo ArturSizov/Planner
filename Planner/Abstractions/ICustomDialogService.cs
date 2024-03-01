@@ -3,6 +3,9 @@ using MudBlazor;
 
 namespace Planner.Abstractions
 {
+    /// <summary>
+    /// Dialog service
+    /// </summary>
     public interface ICustomDialogService
     {
         /// <summary>
@@ -17,6 +20,9 @@ namespace Planner.Abstractions
         /// <returns></returns>
         Task<bool> DeleteItemDialog(string item);
 
+        /// <summary>
+        /// Is opened dialog
+        /// </summary>
         bool IsOpened { get; set; }
 
         /// <summary>
@@ -33,5 +39,10 @@ namespace Planner.Abstractions
         /// </summary>
         /// <returns></returns>
         Task<bool> RefreshPlanOfWeekDialog();
+
+        /// <summary>
+        /// Opens and closes NavMenu
+        /// </summary>
+        void DrawerToggle();
     }
 }

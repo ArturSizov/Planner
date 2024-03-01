@@ -18,6 +18,7 @@ namespace Planner.Services
         /// <inheritdoc/>
         public IDialogReference? DialogReference { get; set; }
 
+        /// <inheritdoc/>
         public bool IsOpened { get; set; }
 
         /// <summary>
@@ -98,11 +99,17 @@ namespace Planner.Services
             DialogReference = _dialogService.Show<CustomDialog>("Внимание", parameters, options);
 
             var result = await DialogReference.Result;
-
+            IsOpened = !IsOpened;
             if (!result.Canceled)
                 return true;
 
             return false;
+        }
+
+        /// <inheritdoc/>
+        public void DrawerToggle()
+        {
+            IsOpened = !IsOpened;
         }
     }
 }
