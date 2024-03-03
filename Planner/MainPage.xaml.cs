@@ -26,14 +26,6 @@ namespace Planner
         {
             bool result;
 
-            //This logic doesn't work. I haven't found a solution yet
-
-            //if (_customDialogService.IsOpened)
-            //{
-            //    _customDialogService.DrawerToggle();
-            //    result = true;
-            //}
-
             var dialogResult = _customDialogService?.DialogReference;
 
             if (dialogResult?.Dialog != null)

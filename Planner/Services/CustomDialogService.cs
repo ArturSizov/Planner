@@ -99,17 +99,11 @@ namespace Planner.Services
             DialogReference = _dialogService.Show<CustomDialog>("Внимание", parameters, options);
 
             var result = await DialogReference.Result;
-            IsOpened = !IsOpened;
+
             if (!result.Canceled)
                 return true;
 
             return false;
-        }
-
-        /// <inheritdoc/>
-        public void DrawerToggle()
-        {
-            IsOpened = !IsOpened;
         }
     }
 }

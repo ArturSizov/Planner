@@ -39,10 +39,5 @@ namespace Planner.Abstractions
         /// </summary>
         /// <returns></returns>
         Task<bool> RefreshPlanOfWeekDialog();
-
-        /// <summary>
-        /// Opens and closes NavMenu
-        /// </summary>
-        void DrawerToggle();
     }
 }
