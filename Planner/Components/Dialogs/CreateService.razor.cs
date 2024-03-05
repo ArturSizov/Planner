@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using Planner.Converters;
 using Planner.Models;
+using System;
 
 namespace Planner.Components.Dialogs
 {
@@ -25,7 +27,6 @@ namespace Planner.Components.Dialogs
         /// Ok method
         /// </summary>
         public void Submit() => MudDialog?.Close(Service);
-
 
         /// <summary>
         /// Close dialog window
@@ -53,8 +54,11 @@ namespace Planner.Components.Dialogs
         /// </summary>
         /// <param name="number"></param>
         /// <returns></returns>
-        public IEnumerable<string> NumberStrength(ushort? number)
+        public IEnumerable<string> NumberStrength(double? number)
         {
+            if (number < 0)
+                yield return "Не может быть отрицательным";
+
             if (number == null)
                 yield return "Не может быть пустым";
 
@@ -66,12 +70,17 @@ namespace Planner.Components.Dialogs
         /// </summary>
         private void SuccessSet()
         {
-            if (string.IsNullOrEmpty(Service.Name) || Service.Plan == null || Service.Fact == null || Service.Name.Length < 2)
+            if (string.IsNullOrEmpty(Service.Name) || Service.Plan == null || Service.Plan < 0 || Service.Fact == null || Service.Name.Length < 2)
             {
                 Success = true;
                 return;
             }
             Success = false;
         }
+
+        /// <summary>
+        /// Overridden default converter
+        /// </summary>
+        private CustomConverter<double?> _converter = new();
     }
 }

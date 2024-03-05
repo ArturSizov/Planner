@@ -75,7 +75,7 @@ namespace Planner.Components.Pages
         /// <summary>
         /// Row fact element reference
         /// </summary>
-        public MudNumericField<ushort?> StringFactRef = new();
+        public MudNumericField<double?> StringFactRef = new();
 
         /// <summary>
         /// Focus on fact row
@@ -107,8 +107,11 @@ namespace Planner.Components.Pages
         /// </summary>
         /// <param name="number"></param>
         /// <returns></returns>
-        public IEnumerable<string> NumberStrength(ushort? number)
+        public IEnumerable<string> NumberStrength(double? number)
         {
+            if (number < 0)
+                number = 0;
+
             if (number == null)
                 yield return "Не может быть пустым";
         }
@@ -125,9 +128,9 @@ namespace Planner.Components.Pages
         {
             if (Service.Plan != null && Service.Fact != null)
             {
-                EightyFive = (Service.Plan * 85 / 100) - Service.Fact;
+                EightyFive = (int?)((Service.Plan * 85 / 100) - Service.Fact);
 
-                OneHundred = Service.Plan - Service.Fact;
+                OneHundred = (int?)(Service.Plan - Service.Fact);
 
                 if (Service.Plan != 0)
                     CurrentDatePercentage = Convert.ToInt32(Convert.ToDouble(Service.Fact) / Convert.ToDouble(Service.Plan) * 100);
@@ -148,7 +151,7 @@ namespace Planner.Components.Pages
                     TargetPercentage = Convert.ToInt32(days / Convert.ToDouble(lastDayOfMonth) * 100);
                 }
 
-                DeltaFact = Service.Fact - (Service.Plan * TargetPercentage / 100);
+                DeltaFact = Convert.ToInt32(Service.Fact - (Service.Plan * TargetPercentage / 100));
 
                 CurrentExecutionPercentage = Convert.ToInt32(Convert.ToDouble(CurrentDatePercentage) / Convert.ToDouble(TargetPercentage) * 100);
 

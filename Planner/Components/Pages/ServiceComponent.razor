@@ -8,8 +8,8 @@
             </MudItem>
             <MudItem>
                 <MudNumericField @bind-Value="@Service.Fact" @ref="StringFactRef" OnBlur="@(async()=> await UpdateCompanyAsync(Service.Name))" DisableUnderLine="true"
-                                 Adornment="Adornment.End" AdornmentText="шт" T="ushort?" HideSpinButtons="true"
-                                 Validation="@(new Func<ushort?, IEnumerable<string>>(NumberStrength))" Immediate="true"
+                                 Adornment="Adornment.End" AdornmentText="шт" T="double?" HideSpinButtons="true"
+                                 Validation="@(new Func<double?, IEnumerable<string>>(NumberStrength))" Immediate="true"
                                  Style="height:14px; width:62px; font-weight:bold; margin:0px; margin-left:3px" />
             </MudItem>
             <MudItem Style="margin-top:-2px">

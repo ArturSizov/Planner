@@ -6,7 +6,7 @@
         </MudItem>
         <MudItem>
             <MudNumericField @bind-Value="@WeekPlan.Service.Plan" @ref="StringFactRef" OnBlur="@(async()=> await UpdateCompanyAsync())" DisableUnderLine="true"
-                             Adornment="Adornment.End" AdornmentText="шт" T="ushort?" HideSpinButtons="true"
+                             Adornment="Adornment.End" AdornmentText="шт" T="double?" HideSpinButtons="true"
                              Immediate="true"
                              Style="height:13px; width:62px; font-weight:bold; margin:0px; margin-left:3px; position:center" />
         </MudItem>
@@ -23,7 +23,7 @@
         </MudItem>
         <MudItem>
             <MudNumericField @bind-Value="@WeekPlan.Service.Fact" @ref="StringWeekPlanRef" OnBlur="@(async()=> await UpdateCompanyAsync())" DisableUnderLine="true"
-                             Adornment="Adornment.End" AdornmentText="шт" T="ushort?" HideSpinButtons="true"
+                             Adornment="Adornment.End" AdornmentText="шт" T="double?" HideSpinButtons="true"
                              Immediate="true"
                              Style="height:14px; width:62px; font-weight:bold; margin:0px; margin-left:3px" />
         </MudItem>

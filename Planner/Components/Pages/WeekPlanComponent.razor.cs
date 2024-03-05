@@ -46,12 +46,12 @@ namespace Planner.Components.Pages
         /// <summary>
         /// Row week plan element reference
         /// </summary>
-        public MudNumericField<ushort?> StringWeekPlanRef = new();
+        public MudNumericField<double?> StringWeekPlanRef = new();
 
         /// <summary>
         /// Row fact element reference
         /// </summary>
-        public MudNumericField<ushort?> StringFactRef = new();
+        public MudNumericField<double?> StringFactRef = new();
 
         public bool Focused { get; set; }
 
