@@ -15,3 +15,21 @@
 .blackout {
     backdrop-filter: blur(10px);
 }
+
+.wrapper_week_plan {
+    display: grid;
+    grid-template-columns: auto 115px 90px;
+    justify-content: start;
+}
+
+.wrapper_current_fact {
+    display: grid;
+    grid-template-columns: auto 115px 25px;
+    justify-content: start;
+}
+
+.wrapper_fact {
+    display: grid;
+    grid-template-columns: auto 115px 15px;
+    justify-content: start;
+}

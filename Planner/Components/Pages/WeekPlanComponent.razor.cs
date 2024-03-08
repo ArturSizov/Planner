@@ -2,6 +2,7 @@
 using MudBlazor;
 using Planner.Abstractions;
 using Planner.Components.Dialogs;
+using Planner.Converters;
 using Planner.Models;
 
 namespace Planner.Components.Pages
@@ -34,6 +35,11 @@ namespace Planner.Components.Pages
         [Inject] ISnackbar? _snackbar { get; set; }
 
         /// <summary>
+        /// Overridden default converter
+        /// </summary>
+        private CustomConverter<double?> _converter = new();
+
+        /// <summary>
         /// Weekly plan completion percentage
         /// </summary>
         public int? CompletionPercentage { get; set; }
@@ -53,7 +59,6 @@ namespace Planner.Components.Pages
         /// </summary>
         public MudNumericField<double?> StringFactRef = new();
 
-        public bool Focused { get; set; }
 
         /// <summary>
         /// Focus on fact row
@@ -77,7 +82,8 @@ namespace Planner.Components.Pages
             {
                 var company = _companyManager.Items.FirstOrDefault(x => x.Branches.Any(b => b.Name == BranchName));
 
-                if (company != null)
+                if (company != null && WeekPlan.Service.Plan >= 0
+                    && WeekPlan.Service.Fact >= 0)
                 {
                     UpdateDate();
                     await _companyManager.UpdateAsync(company);
@@ -122,6 +128,20 @@ namespace Planner.Components.Pages
 
             _snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomCenter;
             _snackbar.Add($"Выполнен расчет для услуги <b style='color:#00FF00'>{service.Name}</b>.<br> <b style='color:red'>ВНИМАНИЕ!</b> Расчет приблизительный</br>", Severity.Info);
+        }
+
+        /// <summary>
+        /// Number validation
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public IEnumerable<string> NumberStrength(double? number)
+        {
+            if (number < 0 || number!.ToString()!.Contains("-0"))
+                yield return "Не может быть отрицательным";
+
+            if (number == null)
+                yield return "Не может быть пустым";
         }
 
         /// <summary>

@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Planner.Converters;
-using Planner.Models;
 
 namespace Planner.Components.Dialogs
 {
-    public partial class CreateService
+    public partial class NumericDialog
     {
         /// <summary>
         /// Mud Dialog Instance
@@ -15,7 +14,12 @@ namespace Planner.Components.Dialogs
         /// <summary>
         /// Item parameter
         /// </summary>
-        [Parameter] public ServiceModel Service { get; set; } = new();
+        [Parameter] public double? Fact { get; set; }
+
+        /// <summary>
+        /// Overridden default converter
+        /// </summary>
+        private CustomConverter<double?> _converter = new();
 
         /// <summary>
         /// Validation of the OK button
@@ -25,29 +29,12 @@ namespace Planner.Components.Dialogs
         /// <summary>
         /// Ok method
         /// </summary>
-        public void Submit() => MudDialog?.Close(Service);
+        public void Submit() => MudDialog?.Close(Fact);
 
         /// <summary>
         /// Close dialog window
         /// </summary>
         public void Cancel() => MudDialog?.Cancel();
-
-        /// <summary>
-        /// Name validations
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public IEnumerable<string> NameStrength(string name)
-        {
-            if (name.Length <= 0)
-                yield return "Не может быть пустым";
-
-            if (name.Length < 2)
-                yield return "Не менее 2-ух символов";
-
-            SuccessSet();
-        }
-
 
         /// <summary>
         /// Number validation
@@ -70,19 +57,12 @@ namespace Planner.Components.Dialogs
         /// </summary>
         private void SuccessSet()
         {
-            if (string.IsNullOrEmpty(Service.Name) || Service.Name.Length < 2 || 
-                Service.Plan == null || Service.Plan < 0 || Service.Plan!.ToString()!.Contains("-0")||
-                Service.Fact == null || Service.Fact < 0 || Service.Fact!.ToString()!.Contains("-0"))
+            if (Fact == null || Fact < 0 || Fact!.ToString()!.Contains("-0"))
             {
                 Success = true;
                 return;
             }
             Success = false;
         }
-
-        /// <summary>
-        /// Overridden default converter
-        /// </summary>
-        private CustomConverter<double?> _converter = new();
     }
 }

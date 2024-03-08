@@ -1,38 +1,37 @@
-﻿<MudStack Spacing="0">
+﻿﻿<MudStack Spacing="0">
     <MudText>Услуга: <b>@WeekPlan.Service.Name</b></MudText>
     <MudGrid Spacing="0">
-        <MudItem>
+        <div class="wrapper_week_plan">
             <MudText>План недели:</MudText>
-        </MudItem>
-        <MudItem>
             <MudNumericField @bind-Value="@WeekPlan.Service.Plan" @ref="StringFactRef" OnBlur="@(async()=> await UpdateCompanyAsync())" DisableUnderLine="true"
-                             Adornment="Adornment.End" AdornmentText="шт" T="double?" HideSpinButtons="true"
-                             Immediate="true"
-                             Style="height:13px; width:62px; font-weight:bold; margin:0px; margin-left:3px; position:center" />
-        </MudItem>
-        <MudItem Style="margin-top:-2px">
-            <MudIconButton OnClick="@(() => StringFactRef.FocusAsync())" Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" Size="Size.Small" />
-            <MudIconButton OnClick="@(() => ReloadPlanAsync())" Icon="@Icons.Material.Outlined.Refresh" Color="Color.Warning" Size="Size.Small" />
-            <MudIconButton OnClick="@(() => OpenNotesAsync())" Icon="@Icons.Material.Outlined.Notes" Color="Color.Warning" Size="Size.Small" Class="ml-15"/>
-        </MudItem>
+                             T="double?" HideSpinButtons="true"
+                             Validation="@(new Func<double?, IEnumerable<string>>(NumberStrength))" Immediate="true" MaxLength="10"
+                             Converter="@_converter"
+                             Style="height:13px; width:115px; margin:0px; margin-left:3px; font-weight:bold; text-align:center" />
+            <MudTooltip>
+                <MudIconButton OnClick="@(() => StringFactRef.FocusAsync())" Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" Size="Size.Small" />
+                <MudIconButton OnClick="@(() => ReloadPlanAsync())" Icon="@Icons.Material.Outlined.Refresh" Color="Color.Warning" Size="Size.Small" />
+                <MudIconButton OnClick="@(() => OpenNotesAsync())" Icon="@Icons.Material.Outlined.Notes" Color="Color.Warning" Size="Size.Small" />
+            </MudTooltip>
+
+        </div>
     </MudGrid>
 
     <MudGrid Spacing="0">
-        <MudItem>
+        <div class="wrapper_current_fact">
             <MudText>Текущий факт недели:</MudText>
-        </MudItem>
-        <MudItem>
             <MudNumericField @bind-Value="@WeekPlan.Service.Fact" @ref="StringWeekPlanRef" OnBlur="@(async()=> await UpdateCompanyAsync())" DisableUnderLine="true"
-                             Adornment="Adornment.End" AdornmentText="шт" T="double?" HideSpinButtons="true"
-                             Immediate="true"
-                             Style="height:14px; width:62px; font-weight:bold; margin:0px; margin-left:3px" />
-        </MudItem>
-        <MudItem Style="margin-top:-2px">
-            <MudIconButton OnClick="@(() => StringWeekPlanRef.FocusAsync())" Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" Size="Size.Small" />
-        </MudItem>
+                             T="double?" HideSpinButtons="true"
+                             Validation="@(new Func<double?, IEnumerable<string>>(NumberStrength))" Immediate="true"
+                             MaxLength="10"
+                             Converter="@_converter"
+                             Style="height:14px; width:115px; font-weight:bold; margin:0px; margin-left:3px" />
+            <MudTooltip>
+                <MudIconButton OnClick="@(() => StringWeekPlanRef.FocusAsync())" Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" Size="Size.Small" />
+            </MudTooltip>
+        </div>
     </MudGrid>
 
     <MudText>Выполнение: <b style="color: @ColorCompletionPercentage">@CompletionPercentage</b>%</MudText>
 </MudStack>
-
 

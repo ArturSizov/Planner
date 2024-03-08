@@ -66,7 +66,6 @@ namespace Planner.Components.Layout
         /// </summary>
         [Inject] public IDataManager<CompanyModel>? CompanyManager { get; set; }
 
-
         /// <summary>
         /// Swipe direction
         /// </summary>
@@ -183,7 +182,10 @@ namespace Planner.Components.Layout
             else
                 return;
 
-            await CreateBranchAsync(company);
+            company = CompanyManager?.Items.FirstOrDefault(x => x.Name == company.Name);
+
+            if(company != null)
+                await CreateBranchAsync(company);
         }
 
         /// <summary>
@@ -290,6 +292,16 @@ namespace Planner.Components.Layout
 
                 DrawerOpen = false;
             }
+        }
+
+        public async Task OpenNumericDialog(ServiceModel service)
+        {
+            if (_customDialogService == null)
+                return;
+
+
+            var result = await _customDialogService.CreateItemDialog<NumericDialog>("Добавить факт", []);
+
         }
 
         /// <summary>

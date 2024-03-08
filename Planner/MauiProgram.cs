@@ -32,7 +32,7 @@ namespace Planner
             //Add services
             builder.Services.AddMauiBlazorWebView()
                    .Services.AddMudServices()
-                   .AddSingleton(new DbConnectionOptions { ConnectionString = Path.Combine(FileSystem.AppDataDirectory, "planner.db") })
+                   .AddSingleton(new DbConnectionOptions { ConnectionString = Path.Combine(FileSystem.AppDataDirectory, "planner2.db") })
                    .AddSingleton<IDialogService, DialogService>()
                    .AddSingleton<IDataProvider<CompanyDAO>, CompanyLiteDbProvider>()
 

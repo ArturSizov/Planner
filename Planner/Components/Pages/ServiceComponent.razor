@@ -3,18 +3,18 @@
         <MudText>Услуга: <b>@Service.Name</b></MudText>
         <MudText>План: <b>@Service.Plan</b> шт</MudText>
         <MudGrid Spacing="0">
-            <MudItem>
-                <MudText> Факт:</MudText>
-            </MudItem>
-            <MudItem>
+            <div class="wrapper_week_plan">
+                <MudText> Факт, шт:</MudText>
                 <MudNumericField @bind-Value="@Service.Fact" @ref="StringFactRef" OnBlur="@(async()=> await UpdateCompanyAsync(Service.Name))" DisableUnderLine="true"
-                                 Adornment="Adornment.End" AdornmentText="шт" T="double?" HideSpinButtons="true"
-                                 Validation="@(new Func<double?, IEnumerable<string>>(NumberStrength))" Immediate="true"
-                                 Style="height:14px; width:62px; font-weight:bold; margin:0px; margin-left:3px" />
-            </MudItem>
-            <MudItem Style="margin-top:-2px">
-                <MudIconButton OnClick="@(() => StringFactRef.FocusAsync())" Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" Size="Size.Small" />
-            </MudItem>
+                                 Adornment="Adornment.None" AdornmentText="шт" T="double?" HideSpinButtons="true"
+                                 Validation="@(new Func<double?, IEnumerable<string>>(NumberStrength))" Immediate="true" MaxLength="10"
+                                 Converter="@_converter"
+                                 Style="height:14px; width:120px; font-weight:bold; margin:0px; margin-left:3px" />
+                <MudTooltip>
+                    <MudIconButton OnClick="@(() => OpenNumericDialogAsync())" Icon="@Icons.Material.Outlined.Add" Color="Color.Success" Size="Size.Small" />
+                    <MudIconButton OnClick="@(() => StringFactRef.FocusAsync())" Icon="@Icons.Material.Outlined.Edit" Color="Color.Success" Size="Size.Small" />
+                </MudTooltip>
+            </div>
         </MudGrid>
         <MudText>Факт на текущую дату: <b style="color: @ColorCurrentExecutionPercentage">@CurrentExecutionPercentage</b> %</MudText>
         <MudText>Разница на текущую дату: <b style="color: @ColorDeltaFact">@DeltaFact</b> шт</MudText>

@@ -1,12 +1,19 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Planner.Abstractions;
+using Planner.Components.Dialogs;
+using Planner.Converters;
 using Planner.Models;
 
 namespace Planner.Components.Pages
 {
     public partial class ServiceComponent
     {
+        /// <summary>
+        /// Overridden default converter
+        /// </summary>
+        private CustomConverter<double?> _converter = new();
+
         /// <summary>
         /// Service parameter
         /// </summary>
@@ -16,6 +23,11 @@ namespace Planner.Components.Pages
         /// Company data manager
         /// </summary>
         [Inject] private IDataManager<CompanyModel>? _companyManager { get; set; }
+
+        /// <summary>
+        /// Dialog service
+        /// </summary>
+        [Inject] private ICustomDialogService? _customDialogService { get; set; }
 
         /// <summary>
         /// 85 %
@@ -40,7 +52,7 @@ namespace Planner.Components.Pages
         /// <summary>
         /// Fact difference for current date
         /// </summary>
-        public int? DeltaFact { get; set; }
+        public double? DeltaFact { get; set; }
 
         /// <summary>
         /// Current progress as a percentage
@@ -109,11 +121,12 @@ namespace Planner.Components.Pages
         /// <returns></returns>
         public IEnumerable<string> NumberStrength(double? number)
         {
-            if (number < 0)
-                number = 0;
+            if (number < 0 || number!.ToString()!.Contains("-0"))
+                yield return "Не может быть отрицательным";
 
             if (number == null)
                 yield return "Не может быть пустым";
+
         }
 
         /// <summary>
@@ -151,7 +164,7 @@ namespace Planner.Components.Pages
                     TargetPercentage = Convert.ToInt32(days / Convert.ToDouble(lastDayOfMonth) * 100);
                 }
 
-                DeltaFact = Convert.ToInt32(Service.Fact - (Service.Plan * TargetPercentage / 100));
+                DeltaFact = (double?)Math.Round((decimal)(Service.Fact - (Service.Plan * TargetPercentage / 100)), 0);
 
                 CurrentExecutionPercentage = Convert.ToInt32(Convert.ToDouble(CurrentDatePercentage) / Convert.ToDouble(TargetPercentage) * 100);
 
@@ -203,6 +216,27 @@ namespace Planner.Components.Pages
                 ColorCurrentExecutionPercentage = "#FFD700";
             else
                 ColorCurrentExecutionPercentage = "red";
+        }
+
+        /// <summary>
+        /// Opens the add to fact window
+        /// </summary>
+        /// <returns></returns>
+        public async Task OpenNumericDialogAsync()
+        {
+            if (_customDialogService == null)
+                return;
+
+            var result = await _customDialogService.CreateItemDialog<NumericDialog>("Добавить факт", []);
+
+            if (result.Item1 && result.Item2 is double fact)
+            {
+                Service.Fact = Service.Fact + fact;
+
+                await UpdateCompanyAsync(Service.Name);
+            }
+            else 
+                return;
         }
     }
 }

@@ -1,0 +1,11 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudNumericField T="double?" @bind-Value="@Fact" Label="Факт"
+                         Validation="@(new Func<double?, IEnumerable<string>>(NumberStrength))" Immediate="true" Clearable="true" MaxLength="10"
+                         Converter="@_converter" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Inherit" OnClick="Cancel">Отмена</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="Submit" Disabled="@Success">Ok</MudButton>
+    </DialogActions>
+</MudDialog>

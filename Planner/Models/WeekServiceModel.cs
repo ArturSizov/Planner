@@ -6,6 +6,7 @@
     public class WeekServiceModel : BindableObject
     {
         private ServiceModel _service = new();
+
         private string? _notes;
 
         public string? Notes
