@@ -3,10 +3,10 @@
         <MudTextField T="string" @bind-Value="@Service.Name" Label="Название услуги"
                       Validation="@(new Func<string, IEnumerable<string>>(NameStrength))" Immediate="true" />
         <MudNumericField T="double?" @bind-Value="@Service.Plan" Label="План"
-                         Validation="@(new Func<double?, IEnumerable<string>>(NumberStrength))" Immediate="true" Clearable="true" MaxLength="10"
+                         Validation="@(new Func<double?, IEnumerable<string>>(NumberStrength))" Immediate="true" MaxLength="10"
                          Converter="@_converter"/>
         <MudNumericField T="double?" @bind-Value="@Service.Fact" Label="Факт на текущую дату"
-                         Validation="@(new Func<double?, IEnumerable<string>>(NumberStrength))" Immediate="true" Clearable="true" MaxLength="10"
+                         Validation="@(new Func<double?, IEnumerable<string>>(NumberStrength))" Immediate="true" MaxLength="10"
                          Converter="@_converter" />
     </DialogContent>
     <DialogActions>

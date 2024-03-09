@@ -1,7 +1,7 @@
 ﻿<MudDialog>
     <DialogContent>
         <MudNumericField T="double?" @bind-Value="@Fact" Label="Факт"
-                         Validation="@(new Func<double?, IEnumerable<string>>(NumberStrength))" Immediate="true" Clearable="true" MaxLength="10"
+                         Validation="@(new Func<double?, IEnumerable<string>>(NumberStrength))" Immediate="true" MaxLength="10"
                          Converter="@_converter" />
     </DialogContent>
     <DialogActions>
