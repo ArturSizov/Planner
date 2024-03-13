@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.Maui;
 using MudBlazor;
 using Planner.Abstractions;
-using Planner.Auxiliary;
 using Planner.Components.Dialogs;
 using Planner.Models;
 using Color = MudBlazor.Color;
@@ -13,11 +11,6 @@ namespace Planner.Components.Layout
 {
     partial class MainLayout
     {
-        /// <summary>
-        /// Company model
-        /// </summary>
-        private CompanyModel? _company;
-
         /// <summary>
         /// Color branch star
         /// </summary>
@@ -157,9 +150,7 @@ namespace Planner.Components.Layout
             {
                 await CompanyManager.ReadAllCompaniesAsync();
 
-                _company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(c => c.Default == true));
-
-                Branch = _company?.Branches.FirstOrDefault(x => x.Default);
+                Branch = CompanyManager?.Items?.FirstOrDefault(x => x.Branches.Any(c => c.Default))?.Branches.FirstOrDefault(x => x.Default == true);
             }
         }
 
@@ -173,18 +164,14 @@ namespace Planner.Components.Layout
 
             var result = await _customDialogService.CreateItemDialog<CreateCompany>("Добавить компанию", []);
 
-            var companyName = result.Item2 as string;
+            var company = new CompanyModel { Name = result.Item2 as string ?? string.Empty };
 
-            var company = new CompanyModel { Name = companyName ?? string.Empty };
-
-            if (result.Item1 && companyName != null)
+            if (result.Item1)
                 CompanyManager?.CreateAsync(company);
             else
                 return;
 
-            company = CompanyManager?.Items.FirstOrDefault(x => x.Name == company.Name);
-
-            if(company != null)
+            if (company != null)
                 await CreateBranchAsync(company);
         }
 
@@ -232,14 +219,9 @@ namespace Planner.Components.Layout
             {
                 if (result.Item2 is string name)
                 {
-                    var newCompany = new CompanyModel
-                    {
-                        Id = company.Id,
-                        Name = name,
-                        Branches = company.Branches
-                    };
+                    company.Name = name;
 
-                    await CompanyManager.UpdateAsync(newCompany);
+                    await CompanyManager.UpdateAsync(company);
                 }
             }
             else
@@ -252,8 +234,6 @@ namespace Planner.Components.Layout
         /// <param name="branch"></param>
         public void GetSelectBranch(BranchModel branch)
         {
-            _company = CompanyManager?.Items.FirstOrDefault(x => x.Branches.Any(c => c.Name == branch.Name));
-
             Branch = branch;
 
             Name = branch.Name;
@@ -271,8 +251,6 @@ namespace Planner.Components.Layout
             if (_customDialogService == null)
                 return;
 
-            _company = company;
-
             var result = await _customDialogService.CreateItemDialog<CreateCompany>("Добавить филиал", []);
 
             if (result.Item1 && result.Item2 is string name && CompanyManager != null)
@@ -283,25 +261,15 @@ namespace Planner.Components.Layout
                     Default = !CompanyManager.Items.Any(x => x.Branches.Any(b => b.Default == true))
                 };
 
-                _company?.Branches.Add(branch);
+                company?.Branches.Add(branch);
 
-                if (_company != null)
-                    await CompanyManager.UpdateAsync(_company);
+                if (company != null)
+                    await CompanyManager.UpdateAsync(company);
 
                 GetSelectBranch(branch);
 
                 DrawerOpen = false;
             }
-        }
-
-        public async Task OpenNumericDialog(ServiceModel service)
-        {
-            if (_customDialogService == null)
-                return;
-
-
-            var result = await _customDialogService.CreateItemDialog<NumericDialog>("Добавить факт", []);
-
         }
 
         /// <summary>
@@ -315,13 +283,13 @@ namespace Planner.Components.Layout
 
             var result = await _customDialogService.DeleteItemDialog(Branch.Name);
 
-            _company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(c => c.Name == Branch.Name));
+            var company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(c => c.Name == Branch.Name));
 
-            if (result && _company != null)
+            if (result && company != null)
             {
-                _company.Branches.Remove(Branch);
+                company.Branches.Remove(Branch);
 
-                Branch = await SetDefaultBranch(_company);
+                Branch = await SetDefaultBranch(company);
             }
         }
 
@@ -343,14 +311,15 @@ namespace Planner.Components.Layout
 
             if (result.Item1 && Branch != null && CompanyManager != null && CompanyManager.Items != null)
             {
+                var company = CompanyManager.Items.FirstOrDefault(x => x.Branches.Any(c => c.Name == Branch.Name));
 
-                if (result.Item2 is string name && _company != null)
+                if (result.Item2 is string name && company != null)
                 {
                     if (Branch != null)
                     {
                         Branch.Name = name;
 
-                        await CompanyManager.UpdateAsync(_company);
+                        await CompanyManager.UpdateAsync(company);
 
                         GetSelectBranch(Branch);
 

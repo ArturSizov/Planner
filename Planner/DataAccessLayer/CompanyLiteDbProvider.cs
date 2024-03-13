@@ -24,9 +24,9 @@ namespace Planner.DataAccessLayer
         private readonly string _connectionString;
 
         /// <summary>
-        /// Database
+        /// Lite collection
         /// </summary>
-        private LiteDatabase? _database;
+        private ILiteCollection<CompanyDAO?> ?_collection;
 
         /// <summary>
         /// Ctor
@@ -37,20 +37,19 @@ namespace Planner.DataAccessLayer
         {
             _logger = logger;
             _connectionString = options.ConnectionString;
+
             Task.Run(InitAsync);
         }
 
         /// <inheritdoc/>
         public Task<int> CreateAsync(CompanyDAO item)
         {
-            if (_database is null)
+            if (_collection is null)
                 return Task.FromResult(0);
 
             try
             {
-                var collection = _database.GetCollection<CompanyDAO>(companiesDataCollectionName);
-                collection.Insert(item);
-                collection.EnsureIndex(x => x.Name);
+                _collection.Insert(item);
 
                 return Task.FromResult(1);
             }
@@ -64,12 +63,12 @@ namespace Planner.DataAccessLayer
         /// <inheritdoc/>
         public Task<int> DeleteAllAsync()
         {
-            if (_database is null)
+            if (_collection is null)
                 return Task.FromResult(0);
 
             try
             {
-                var collection = _database.GetCollection<CompanyDAO>(companiesDataCollectionName).DeleteAll();
+                _collection.DeleteAll();
 
                 return Task.FromResult(1);
             }
@@ -83,12 +82,12 @@ namespace Planner.DataAccessLayer
         /// <inheritdoc/>
         public Task<int> DeleteAsync(CompanyDAO item)
         {
-            if (_database is null)
+            if (_collection is null)
                 return Task.FromResult(0);
 
             try
             {
-                _database.GetCollection<CompanyDAO>(companiesDataCollectionName).Delete(item.Id);
+                _collection.Delete(item.Id);
 
                 return Task.FromResult(1);
             }
@@ -100,35 +99,31 @@ namespace Planner.DataAccessLayer
         }
 
         /// <inheritdoc/>
-        public Task<List<CompanyDAO>> ReadAllAsync()
+        public Task<List<CompanyDAO?>> ReadAllAsync()
         {
-            if (_database is null)
-                return Task.FromResult(new List<CompanyDAO>());
+            if (_collection is null)
+                return Task.FromResult(new List<CompanyDAO?>());
 
             try
             {
-                var collection = _database.GetCollection<CompanyDAO>(companiesDataCollectionName);
-
-                return Task.FromResult(collection.Query().ToList());
+                return Task.FromResult(_collection.FindAll().ToList());
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Exception in ReadAllAsync()");
-                return Task.FromResult(new List<CompanyDAO>());
+                return Task.FromResult(new List<CompanyDAO?>());
             }
         }
 
         /// <inheritdoc/>
         public Task<CompanyDAO?> ReadAsync(int id)
         {
-            if (_database is null)
+            if (_collection is null)
                 return Task.FromResult<CompanyDAO?>(null);
 
             try
             {
-                var collection = _database.GetCollection<CompanyDAO?>(companiesDataCollectionName);
-
-                return Task.FromResult(collection.Query().Where(x => x != null && x.Id == id).FirstOrDefault());
+                return Task.FromResult(_collection.FindById(id));
             }
             catch (Exception ex)
             {
@@ -140,33 +135,15 @@ namespace Planner.DataAccessLayer
         /// <inheritdoc/>
         public Task<int> UpdateAsync(CompanyDAO item)
         {
-            if (_database is null)
+            if (_collection is null)
                 return Task.FromResult(0);
 
             try
             {
-                var foundItem = new CompanyDAO();
+                _collection.Update(item);
 
-                if (item.Id == 0)
-                    foundItem = ReadAllAsync().Result.FirstOrDefault(x => x.Name == item.Name);                
-                else
-                    foundItem = ReadAllAsync().Result.FirstOrDefault(x => x.Id == item.Id);
+                return Task.FromResult(1);
 
-                if (foundItem != null)
-                {
-                    var company = new CompanyDAO
-                    {
-                        Id = foundItem.Id,
-                        Name = item.Name,
-                        Branches = item.Branches
-                    };
-
-                    var collection = _database.GetCollection<CompanyDAO>(companiesDataCollectionName).Update(company);
-
-                    return Task.FromResult(1);
-                }
-
-                return Task.FromResult(0);
             }
             catch (Exception ex)
             {
@@ -183,7 +160,8 @@ namespace Planner.DataAccessLayer
         {
             try
             {
-                _database ??= new LiteDatabase(_connectionString);
+                var database = new LiteDatabase(_connectionString);
+                _collection = database.GetCollection<CompanyDAO?>(companiesDataCollectionName);
             }
             catch (Exception ex)
             {

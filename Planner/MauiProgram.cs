@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using LiteDB;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using MudBlazor;
 using MudBlazor.Services;
@@ -32,7 +33,7 @@ namespace Planner
             //Add services
             builder.Services.AddMauiBlazorWebView()
                    .Services.AddMudServices()
-                   .AddSingleton(new DbConnectionOptions { ConnectionString = Path.Combine(FileSystem.AppDataDirectory, "planner2.db") })
+                   .AddSingleton(new DbConnectionOptions { ConnectionString = Path.Combine(FileSystem.AppDataDirectory, "planner.db") })
                    .AddSingleton<IDialogService, DialogService>()
                    .AddSingleton<IDataProvider<CompanyDAO>, CompanyLiteDbProvider>()
 

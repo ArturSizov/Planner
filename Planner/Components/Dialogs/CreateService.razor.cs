@@ -71,8 +71,8 @@ namespace Planner.Components.Dialogs
         private void SuccessSet()
         {
             if (string.IsNullOrEmpty(Service.Name) || Service.Name.Length < 2 || 
-                Service.Plan == null || Service.Plan < 0 || Service.Plan!.ToString()!.Contains("-0")||
-                Service.Fact == null || Service.Fact < 0 || Service.Fact!.ToString()!.Contains("-0"))
+                Service.Plan == null || Service.Plan < 0 || Service.Plan.ToString()!.Contains("-0")||
+                Service.Fact == null || Service.Fact < 0 || Service.Fact.ToString()!.Contains("-0"))
             {
                 Success = true;
                 return;

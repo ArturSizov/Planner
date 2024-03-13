@@ -10,8 +10,9 @@ namespace Planner.Abstractions
 		ObservableCollection<T> Items { get; set; }
 
         /// <summary>
-		/// Reads all data from db
-		/// </summary>
+        /// Read database
+        /// </summary>
+        /// <returns></returns>
         Task ReadAllCompaniesAsync();
     }
 }

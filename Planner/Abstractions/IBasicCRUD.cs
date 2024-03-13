@@ -37,7 +37,7 @@
         /// Returns all records from the storage
         /// </summary>
         /// <returns></returns>
-        Task<List<T>> ReadAllAsync();
+        Task<List<T?>> ReadAllAsync();
 
         /// <summary>
         /// Deletes all records from the storage. Be careful!

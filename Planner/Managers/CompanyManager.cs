@@ -38,15 +38,10 @@ namespace Planner.Managers
             else
                 id = Items.Max(x => x.Id) + 1;
 
-            var company = new CompanyModel
-            {
-                Id = id,
-                Name = item.Name,
-                Branches = item.Branches
-            };
+            item.Id = id;
 
-            Items.Add(company);
-            return _dataProvider.CreateAsync(company.ToDAO());
+            Items.Add(item);
+            return _dataProvider.CreateAsync(item.ToDAO());
         }
 
         /// <inheritdoc/>
@@ -59,17 +54,15 @@ namespace Planner.Managers
         /// <inheritdoc/>
         public Task<int> DeleteAsync(CompanyModel item)
         {
-            var foundItem = Items.FirstOrDefault(x => x.Id == item.Id);
-
-            if (foundItem == null)
-                return Task.FromResult(0);
-
-            Items.Remove(foundItem);
+            Items.Remove(item);
             return _dataProvider.DeleteAsync(item.ToDAO());
         }
 
         /// <inheritdoc/>
-        public Task<List<CompanyModel>> ReadAllAsync() => Task.FromResult(Items.ToList());
+        public Task<List<CompanyModel?>> ReadAllAsync()
+        {
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc/>
         public Task<CompanyModel?> ReadAsync(int id)
@@ -81,17 +74,7 @@ namespace Planner.Managers
         /// <inheritdoc/>
         public Task<int> UpdateAsync(CompanyModel item)
         {
-            var foundItem = Items.FirstOrDefault(x => x.Id == item.Id);
-
-            if (foundItem == null)
-                return Task.FromResult(0);
-
-            if (foundItem != null)
-            {
-                foundItem.Id = item.Id;
-                foundItem.Name = item.Name;
-                foundItem.Branches = item.Branches;
-            }
+            Items.FirstOrDefault(x => x.Id == item.Id);
 
             return _dataProvider.UpdateAsync(item.ToDAO());
         }
@@ -100,7 +83,8 @@ namespace Planner.Managers
 		public async Task ReadAllCompaniesAsync()
         {
             var items = await _dataProvider.ReadAllAsync();
-            Items = new ObservableCollection<CompanyModel>(items.Select(x => x.ToModel()));
+            
+            Items = new ObservableCollection<CompanyModel>(items.Select(x => x!.ToModel()));
         }
     }
 }

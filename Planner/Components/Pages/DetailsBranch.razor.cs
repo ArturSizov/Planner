@@ -90,9 +90,12 @@ namespace Planner.Components.Pages
                 Name = service.Name
             };
 
+
             if (_companyManager != null)
             {
                 var company = _companyManager.Items.FirstOrDefault(x => x.Branches.Any(b => b.Name == Branch?.Name));
+
+                var weekService = Branch?.WeekPlans.FirstOrDefault(x => x.Service.Name == service.Name);
 
                 var parameters = new DialogParameters<CreateService>
                 {
@@ -103,7 +106,7 @@ namespace Planner.Components.Pages
 
                 if (result.Item1 && service != null && _companyManager != null)
                 {
-                    if (result.Item2 is ServiceModel newService && company != null)
+                    if (result.Item2 is ServiceModel newService && company != null && weekService != null)
                     {
                         if (newService != null)
                         {
@@ -112,12 +115,13 @@ namespace Planner.Components.Pages
                             service.Fact = newService.Fact;
                         }
 
+                        weekService.Service.Name = service.Name;
+
                         await _companyManager.UpdateAsync(company);
                     }
                 }
                 else
                     return;
-
             }
 
             StateHasChanged();
@@ -132,6 +136,7 @@ namespace Planner.Components.Pages
         {
             if (_customDialogService == null)
                 return;
+
             var result = await _customDialogService.DeleteItemDialog(service.Name);
 
             if (result && _companyManager != null)
