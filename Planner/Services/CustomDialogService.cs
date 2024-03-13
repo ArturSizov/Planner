@@ -88,7 +88,7 @@ namespace Planner.Services
         {
             var parameters = new DialogParameters<CustomDialog>
             {
-                { x => x.ContentText,  (MarkupString)"Сегодня не <b style='color:red'>понедельник</b>.<br>Вы действительно хотите рассчитать план на неделю?</br>" },
+                { x => x.ContentText, (MarkupString)"Сегодня не <b style='color:red'>понедельник</b>.<br>Вы действительно хотите рассчитать план на неделю?</br>" },
                 { x => x.OkButtonText, "Да" },
                 { x => x.NoButtonText, "Нет" },
                 { x => x.Color, MudBlazor.Color.Warning }
@@ -99,6 +99,13 @@ namespace Planner.Services
             DialogReference = _dialogService.Show<CustomDialog>("Внимание", parameters, options);
 
             var result = await DialogReference.Result;
+
+            if (IsOpened)
+            {
+                IsOpened = false;
+
+                return false;
+            }
 
             if (!result.Canceled)
                 return true;
